@@ -15,3 +15,34 @@
             helper(root.right);  
         }       
     }
+    
+    ----------------
+    AC corrected
+    
+        // inorder traversal
+    public int getMinimumDifference(TreeNode root) {
+        int res = Integer.MAX_VALUE;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode p = root;
+        while(p != null){
+            stack.push(p);
+            p = p.left;
+        }
+        TreeNode last = null;
+        while(!stack.isEmpty()){
+            TreeNode cur = stack.pop();
+            if(last == null){
+                last = cur;
+            }else{
+                res = Math.min(res, cur.val - last.val);
+                last = cur;
+            }
+            //if(cur.right != null)
+            cur = cur.right;
+            while(cur != null){
+                stack.push(cur);
+                cur = cur.left;
+            }
+        }
+        return res;
+    }
