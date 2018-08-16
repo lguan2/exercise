@@ -1,0 +1,14 @@
+    public boolean checkSubarraySum(int[] nums, int k) {
+        if(nums == null || nums.length <= 1)
+            return false;
+        int sum = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i < nums.length; i++){
+            sum += nums[i];
+            if(map.get(sum % k) != null && i-map.get(sum%k) > 1){
+                return true;
+            }
+            map.put(sum%k, i);
+        }
+        return false;
+    }
