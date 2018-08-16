@@ -11,3 +11,30 @@
         }
         return res;
     }
+    
+    -----------
+    AC
+    
+        public int findPairs(int[] nums, int k) {
+        if(k < 0){
+            return 0;
+        }
+        int res = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num : nums){
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        for(Integer num : map.keySet()){
+            if(k != 0){
+                if(map.containsKey(num + k))
+                    res++;   
+            }else{
+                if(map.get(num) >= 2){
+                    res++;
+                    map.put(num, 0);
+                }
+            }
+            
+        }
+        return res;
+    }
