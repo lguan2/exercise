@@ -1,0 +1,16 @@
+    public String[] findRelativeRanks(int[] nums) {
+        int len = nums.length;
+        String[] res = new String[len];
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0) {
+                res[i] = "Gold Medal";
+            } else if (i == 1) {
+                res[i] = "Silver Medal";
+            } else if (i == 2) {
+                res[i] = "Bronze Medal";
+            } else {
+                res[i] = (len - i - 1) + "";
+            }
+        }
+        return res;
+    }
