@@ -1,0 +1,28 @@
+    public int kEmptySlots(int[] flowers, int k) {
+        TreeSet<Integer> set = new TreeSet<>();
+        for(int i = 0; i < flowers.length; i++){
+            int f = flowers[i];
+            Integer floor = set.floor(f);
+            if(floor != null && f - floor == k+1){
+                return i+1;
+            }
+            Integer ceiling = set.ceiling(f);
+            if(ceiling != null && ceiling - f == k+1){
+                return i+1;
+            }
+            set.add(f);
+        }
+        return -1;
+    }
+    
+    ----------------
+    Time: O(nlogn), Space: O(n)
+    熟悉treeset api: 
+    - E	ceiling(E e)
+      Returns the least element in this set greater than or equal to the given element, or null if there is no such element.
+    - E	floor(E e)
+      Returns the greatest element in this set less than or equal to the given element, or null if there is no such element.
+      
+ 
+ 还可以做simulation 或者bucket sort
+    
