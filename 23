@@ -1,0 +1,26 @@
+    class ListNode {
+        int val;
+        ListNode next;
+        public ListNode(int val) {
+            this.val = val;
+        }
+    }
+    
+    public ListNode mergeKLists(ListNode[] lists){
+        if(lists == null || lists.length == 0)
+            return null;
+        ListNode head = new ListNode(-1);
+        PriorityQueue<ListNode> heap = new PriorityQueue<>((l1, l2) -> (l1.val - l2.val));
+        for(ListNode h : lists)
+            heap.add(h);
+        ListNode p = head;
+        while(!heap.isEmpty()){
+            ListNode n = heap.poll();
+            p.next = n;
+            p = p.next;
+            if(n.next != null){
+                heap.add(n.next);
+            }
+        }
+        return head.next;  
+    }
