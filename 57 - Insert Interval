@@ -1,0 +1,49 @@
+Given a set of non-overlapping intervals, insert a new interval into the intervals (merge if necessary).
+
+You may assume that the intervals were initially sorted according to their start times.
+
+Example 1:
+
+Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+Output: [[1,5],[6,9]]
+Example 2:
+
+Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+Output: [[1,2],[3,10],[12,16]]
+Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
+
+    
+    ---------------------------------------
+    public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
+        List<Interval> res = new ArrayList<>();
+        if(intervals == null || intervals.size() == 0){
+            res.add(newInterval);
+            return res;
+        }
+        for(int i = 0; i < intervals.size(); i++){
+            Interval cur = intervals.get(i);
+            if(cur.end < newInterval.start){
+                res.add(cur);
+            }else{
+                //要分两种情况
+                if(newInterval.end < cur.start){
+                    res.add(newInterval);
+                    newInterval = cur;  
+                }else{
+                    newInterval.start = Math.min(cur.start, newInterval.start);
+                    newInterval.end = Math.max(cur.end, newInterval.end);
+                }    
+            }
+        }
+        //别忘了加最后一个
+        res.add(newInterval);
+        return res;
+        
+    }
+    
+    ------------------------------
+    
+    AC, 注意当cur.end >= newInterval的时候要有两种情况分析，一种将newinterval不断进行改变，另一种就是已经可以把newinterval加入res的情况->之后将
+    cur代替newinterval
+    
+    不要忘了加最后一个，在return res前
