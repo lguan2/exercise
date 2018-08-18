@@ -1,3 +1,17 @@
+Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+
+Example:
+
+Input:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+Output: 1->1->2->3->4->4->5->6
+
+-----------------------------------------------
+    
     class ListNode {
         int val;
         ListNode next;
@@ -24,3 +38,35 @@
         }
         return head.next;  
     }
+    
+    --------------------------------------------------
+        public ListNode mergeKLists(ListNode[] lists){
+        if(lists == null || lists.length == 0)
+            return null;
+        ListNode head = new ListNode(-1);
+        PriorityQueue<ListNode> heap = new PriorityQueue<>((l1, l2) -> (l1.val - l2.val));
+        
+        // for(ListNode h : lists)
+        //     heap.add(h);
+        // 注意判断是不是null
+        for(int i = 0; i < lists.length; i++){
+            if(lists[i] != null){
+                heap.add(lists[i]);
+            }
+        }
+        ListNode p = head;
+        while(!heap.isEmpty()){
+            ListNode n = heap.poll();
+            p.next = n;
+            p = p.next;
+            if(n.next != null){
+                heap.add(n.next);
+            }
+        }
+        return head.next;  
+    }
+    
+    -----------------------------------------------------
+    
+    AC 加到heap的时候注意判断是不是null 
+    Space: O(k), Time: O(nlogk)
