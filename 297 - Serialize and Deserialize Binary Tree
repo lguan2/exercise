@@ -1,0 +1,72 @@
+Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+
+Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+
+Example: 
+
+You may serialize the following tree:
+
+    1
+   / \
+  2   3
+     / \
+    4   5
+
+as "[1,2,3,null,null,4,5]"
+
+-----------------------------
+
+    private static final String SPLITER = ",";
+    private static final String NULL_PLACE_HOLDER = "#";
+    
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        serializeHelper(root, sb);
+        return sb.toString();
+    }
+    
+    private void serializeHelper(TreeNode root, StringBuilder sb){
+        if(root == null){
+            sb.append(NULL_PLACE_HOLDER).append(SPLITER);
+            return;
+        }
+        sb.append(root.val).append(SPLITER);
+        serializeHelper(root.left, sb);
+        serializeHelper(root.right, sb);
+    }
+    
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] nodes = data.split(SPLITER);
+        Deque<String> queue = new LinkedList<>();
+        queue.addAll(Arrays.asList(nodes));
+        return deserializeHelper(queue);
+    }
+    
+    private TreeNode deserializeHelper(Deque<String> queue){
+        // 不需要
+        // if(queue.isEmpty())
+        //     return null;
+        String cur = queue.pollFirst();
+        if(cur.equals(NULL_PLACE_HOLDER))
+            return null;
+        Integer val = Integer.parseInt(cur);
+        TreeNode root = new TreeNode(val);
+        root.left = deserializeHelper(queue);
+        root.right = deserializeHelper(queue);
+        return root;
+    }
+}
+------------------------------------------------
+
+AC, 以上做法是有的是DFS recursion
+Arrays.asList List<String> stooges = Arrays.asList("Larry", "Moe", "Curly");
+Deque, 可以用linkedlist实现，此处用了pollFisrt() api, 也可以用remove()
+Integer val = Integer.parseInt(cur);
+
+本题也有迭代dfs,或者迭代bfs做法
+
+
+
