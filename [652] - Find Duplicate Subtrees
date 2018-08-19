@@ -1,0 +1,63 @@
+Given a binary tree, return all duplicate subtrees. For each kind of duplicate subtrees, you only need to return the root node of any one of them.
+
+Two trees are duplicate if they have the same structure with same node values.
+
+Example 1:
+
+        1
+       / \
+      2   3
+     /   / \
+    4   2   4
+       /
+      4
+The following are two duplicate subtrees:
+
+      2
+     /
+    4
+and
+
+    4
+Therefore, you need to return above trees' root in the form of a list.
+
+
+-------------------------------------------
+
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        List<TreeNode> res = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        dfs(root, res, map);
+        return res; 
+    }
+    
+    public String dfs(TreeNode root, List<TreeNode> res, Map<String, Integer> map){
+        if(root == null)
+            return "#";
+        StringBuilder sb = new StringBuilder();
+        String cur = null;
+        sb.append(root.val).append(" ").append(dfs(root.left, res, map)).append(" ").append(dfs(root.right, res, map)).append(" ");
+        cur = sb.toString();
+        map.put(cur, map.getOrDefault(cur, 0) + 1);
+        if(map.get(cur) == 2)
+            res.add(root);
+        return cur;
+    }
+-------------------------------------------
+
+本质上是树的序列化结合hashmap, 但是使用string 做key不是一个好的选择
+
+
+Other solution:
+https://zxi.mytechroad.com/blog/tree/leetcode-652-find-duplicate-subtrees/ -> 不懂？
+
+
+
+
+
+
+
+
+
+
+
