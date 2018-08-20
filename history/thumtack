@@ -1,0 +1,704 @@
+1.	题意是给一个data stream 输入整数，输入的时候，可以随时调用getMedian()这个方法获得目前已输入数字的median。
+
+听说是用一个bucket来存每个数的个数，但是最后怎么求median啊？
+
+比如我有一个insert（）方法：
+
+class MedianFinder {
+
+    /** initialize your data structure here. */
+    PriorityQueue<Integer> left = new PriorityQueue<>((a, b) -> b-a);
+    PriorityQueue<Integer> right = new PriorityQueue<>((a, b) -> a-b);
+    
+    public MedianFinder() {
+        
+    }
+    
+    public void addNum(int num) {
+        if(left.isEmpty() || num <= left.peek()) {
+            left.offer(num);
+        } else {
+            right.offer(num);
+        }
+        //balance two part.
+        if(left.size() < right.size()) {
+            left.offer(right.poll());
+        } else if(left.size() - right.size() == 2) {
+            right.offer(left.poll());
+        }
+    }
+    
+    public double findMedian() {
+        if(left.size() != right.size()) return (double)left.peek();
+        return (double)(left.peek() + right.peek()) / 2;
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
+
+另一种情况：
+给一个stream of integers. The value of all integers are within certain range, e.g [0, 10000), 让动态的求mean, 和median. 要求O(1) space. 解法就是maintain一个额外size of 10000的数组, 数组里存出现integer的个数，然后每次求median的时候从数组头开始求counter的和。稍微有点tricky的地方是如果是偶数个数，median需要求中间两数的均值。
+
+
+
+2.	Find the Closest Palindrome
+
+class Solution {
+    
+    /**
+    解题思路：
+    实现题，没啥trick，就是麻烦
+    对于任意的一个数字n最近的palindrome无外乎就这么几种情况
+    第一种，少一位的，那就是999...999
+    第二种多一位的，那就是100...0001
+    如果位数相同的，就是以下几种情况：
+    第一种，全是9的，就是999...999
+    第二种，100...001
+    第三种，123456 -> 12321, 12421, 12221 （中间的数字加1， 0， -1）
+    找出所有这些可能的结果，和n进行比较，找到最小的。
+    其中有一个trick，就是拿回来的list要进行sort，
+    这样就可以保证，对于类似 88这种情况，我们求出77 和 99，会先判断77，并且把结果设定为77
+    **/
+    public String nearestPalindromic(String n) {
+        if(n == null || n.length() == 0) return n;
+        // if only 1 digit, then minus one and return
+        if(n.length() == 1) return String.valueOf(Integer.parseInt(n)-1);
+        
+        List<Long> possibleRes = new ArrayList<>();
+        
+        possibleRes.add(addAllNine(n.length()-1));
+        possibleRes.add(addAllNine(n.length()));
+        possibleRes.add(addZeroOne(n.length()+1));
+        possibleRes.add(addZeroOne(n.length()));
+        int half = (n.length()+1)/2;
+        long firstHalf = Long.parseLong(n.substring(0, half));
+        getAllCandidates(possibleRes, firstHalf, n.length());
+        
+        long candidate = 0;
+        long minDiff = Long.MAX_VALUE;
+        long ori = Long.parseLong(n);
+        Collections.sort(possibleRes);
+        for(long can : possibleRes) {
+            long diff = Math.abs(can - ori);
+            if(can == Long.parseLong(n)) continue;
+            if(diff < minDiff) {
+                minDiff = diff;
+                candidate = can;
+            }
+        }
+        return String.valueOf(candidate);
+    }
+    
+    private void getAllCandidates(List<Long> possibleRes, long firstHalf, int len) {
+        List<Long> tmp = new ArrayList<>();
+        tmp.add(firstHalf);
+        tmp.add(firstHalf+1);
+        tmp.add(firstHalf-1);
+        
+        for(long num : tmp) {
+            String str = String.valueOf(num);
+            if(len % 2 == 0) {
+                StringBuilder sb = new StringBuilder(str);
+                str = str + sb.reverse().toString();
+                possibleRes.add(Long.parseLong(str));
+            } else {
+                String rev = str.substring(0, str.length()-1);
+                StringBuilder sb = new StringBuilder(rev);
+                possibleRes.add(Long.parseLong(str + sb.reverse().toString()));
+            }
+        }
+    }
+    
+    private long addAllNine(int n) {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<n; i++) {
+            sb.append(9);
+        }
+        return Long.parseLong(sb.toString());
+    }
+    
+    private long addZeroOne(int n) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(1);
+        for(int i=0; i<n-2; i++) {
+            sb.append(0);
+        }
+        sb.append(1);
+        return Long.parseLong(sb.toString());
+    }
+}
+
+3.	Evaluate Reverse Polish Notation
+class Solution {
+    public int evalRPN(String[] tokens) {
+        if(tokens == null || tokens.length == 0) return 0;
+        Stack<Integer> stack = new Stack<>();
+        for(int i=0; i<tokens.length; i++) {
+            if(tokens[i].equals("+")) {
+                int num1 = stack.pop();
+                int num2 = stack.pop();
+                stack.push(num1+num2);
+            } else if(tokens[i].equals("-")) {
+                int num1 = stack.pop();
+                int num2 = stack.pop();
+                stack.push(num2-num1);
+            } else if(tokens[i].equals("*")) {
+                int num1 = stack.pop();
+                int num2 = stack.pop();
+                stack.push(num1*num2);
+            } else if(tokens[i].equals("/")) {
+                int num1 = stack.pop();
+                int num2 = stack.pop();
+                stack.push(num2/num1);
+            } else {
+                stack.push(Integer.valueOf(tokens[i]));
+            }
+        }
+        return stack.pop();
+    }
+}
+
+4.	Amicable Pair
+// A simple Java program to count
+// amicable pairs in an array.
+import java.io.*;
+ 
+class GFG 
+{
+ 
+    // Calculate the sum 
+    // of proper divisors
+    static int sumOfDiv(int x)
+    {
+ 
+        // 1 is a proper divisor
+        int sum = 1;
+        for (int i = 2; i <= Math.sqrt(x); i++) 
+        {
+            if (x % i == 0) 
+            {
+                sum += i;
+ 
+                // To handle perfect squares
+                if (x / i != i)
+                    sum += x / i;
+            }
+        }
+ 
+        return sum;
+    }
+ 
+    // Check if pair is amicable
+    static boolean isAmicable(int a, int b)
+    {
+        return (sumOfDiv(a) == b && 
+                sumOfDiv(b) == a);
+    }
+ 
+    // This function prints pair
+    //  of amicable pairs present
+    // in the input array
+    static int countPairs(int arr[], int n)
+    {
+        int count = 0;
+ 
+        // Iterate through each pair, 
+        // and find if it an amicable pair
+        for (int i = 0; i < n; i++)
+            for (int j = i + 1; j < n; j++)
+                if (isAmicable(arr[i], arr[j]))
+                    count++;
+ 
+        return count;
+    }
+ 
+    // Driver code
+    public static void main(String args[])
+    {
+ 
+        int arr1[] = { 220, 284, 1184, 
+                       1210, 2, 5 };
+        int n1 = arr1.length;
+ 
+        System.out.println(countPairs(arr1, n1));
+ 
+        int arr2[] = { 2620, 2924, 5020,
+                       5564, 6232, 6368 };
+        int n2 = arr2.length;
+ 
+        System.out.println(countPairs(arr2, n2));
+    }
+}
+ 
+// This code is contributed by Anshika Goyal.
+
+5.	Collatz conjecture sequence
+
+
+
+def collatz_sequence(x):
+    seq = [x]
+    if x < 1:
+       return []
+    while x > 1:
+       if x % 2 == 0:
+         x = x / 2
+       else:
+         x = 3 * x + 1 
+       seq.append(x)    # Added line
+    return seq
+
+6.	Minimum Window Substring
+class Solution {
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> map = new HashMap<>();
+        
+        for(char c : s.toCharArray()) {
+            map.put(c, 0);
+        }
+        for(char c : t.toCharArray()) {
+            if(!map.containsKey(c)) return "";
+            map.put(c, map.get(c)+1);
+        }
+        
+        int start = 0;
+        int minStart = 0;
+        int len = Integer.MAX_VALUE;
+        int counter = t.length();
+        
+        for(int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            if(map.get(c) > 0) counter--;
+            map.put(c, map.get(c)-1);
+            
+            while(counter == 0) {
+                int curLen = i-start+1;
+                if(curLen < len) {
+                    len = curLen;
+                    minStart = start;
+                }
+                char ch = s.charAt(start);
+                map.put(ch, map.get(ch)+1);
+                if(map.get(ch) > 0) counter ++;
+                start++;
+            }
+        }
+        return len == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart+len);
+    }
+}
+
+
+7.	Serialize and Deserialize an N-ary Tree
+Given an N-ary tree where every node has at-most N children. How to serialize and deserialze it? Serialization is to store tree in a file so that it can be later restored. The structure of tree must be maintained. Deserialization is reading tree back from file.
+This post is mainly an extension of below post. 
+Serialize and Deserialize a Binary Tree
+In an N-ary tree, there are no designated left and right children. An N-ary tree is represented by storing an array or list of child pointers with every node.
+The idea is to store an ‘end of children’ marker with every node. The following diagram shows serialization where ‘)’ is used as end of children marker.
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val,List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+/**
+解题思路：
+serialize的时候，不仅记录每一个node的value，还要记录这个node有多少个children
+deserialized的时候，每次从queue中取出两个值，第一个是当前node的value，第二个是有多少个children
+**/
+class Codec {
+    
+    
+    // Encodes a tree to a single string.
+    public String serialize(Node root) {
+        if(root == null) return "";
+        List<String> list = new LinkedList<>();
+        dfs(root, list);
+        return String.join(",", list);
+    }
+    
+    private void dfs(Node root, List<String> list) {
+        if(root == null) return;
+        list.add(String.valueOf(root.val));
+        list.add(String.valueOf(root.children.size()));
+        for(int i=0; i<root.children.size(); i++) {
+            dfs(root.children.get(i), list);
+        }
+    }
+
+    // Decodes your encoded data to tree.
+    public Node deserialize(String data) {
+        if(data == null || data.length() == 0) return null;
+        Queue<String> queue = new LinkedList<>(Arrays.asList(data.split(",")));
+        Node root = reconstruct(queue);
+        return root;
+    }
+    
+    private Node reconstruct(Queue<String> queue) {
+        Node root = new Node();
+        root.val = Integer.parseInt(queue.poll());
+        int size = Integer.parseInt(queue.poll());
+        root.children = new ArrayList<>();
+        for(int i=0; i<size; i++) {
+            root.children.add(reconstruct(queue));
+        }
+        return root;
+    }
+}
+
+相似的serialize and deserialize binary tree：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    private static final String SEP = ",";
+    private static final String END = "#";
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        if(root == null) return sb.toString();
+        
+        helper(sb, root);
+        return sb.toString();
+    }
+    
+    private void helper(StringBuilder sb, TreeNode root) {
+        if(root == null) {
+            sb.append(END).append(SEP);
+            return;
+        }
+        sb.append(root.val);
+        sb.append(SEP);
+        helper(sb, root.left);
+        helper(sb, root.right);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if(data == null || data.length() == 0) return null;
+        String[] arr = data.split(",");
+        Deque<String> nodes = new LinkedList<>();
+        nodes.addAll(Arrays.asList(arr));
+        return deHelper(nodes);
+    }
+    
+    private TreeNode deHelper(Deque<String> nodes) {
+        String s = nodes.remove();
+        if(s.equals(END)) return null;
+        else {
+            int val = Integer.valueOf(s);
+            TreeNode root = new TreeNode(val);
+            root.left = deHelper(nodes);
+            root.right = deHelper(nodes);
+            return root;
+        }
+    }
+}
+
+8.	检测图中是否有环，leetcode近似题：
+class Solution {
+    /**
+    解题思路：
+    这是一个有向图的问题，如果这个图中有环的话，则环中的某个点不可能入度为0
+    
+    0 -> 1 -> 2
+         |    ^
+         V    |
+         3 -> 4
+         
+    其中 入度的情况：
+    0 ： 0
+    1 ： 1
+    2 ： 2
+    3 ： 1
+    4 ： 1
+    每次找出入度为0的course 入队列，并且相邻的点的入度减1，如果相邻点的入度为0的话，则继续入队列。
+    如果最后队列中的课程数量等于实际课程数量，就说明可以走通。
+    **/
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if(prerequisites == null || prerequisites.length == 0) return true;
+        int[] indegree = new int[numCourses];
+        for(int i=0; i<prerequisites.length; i++) {
+            int pre = prerequisites[i][1];
+            int ready = prerequisites[i][0];
+            indegree[ready]++;
+        }
+        
+        Queue<Integer> queue = new LinkedList<>();
+        
+        for(int i=0; i<numCourses; i++) {
+            if(indegree[i] == 0) queue.offer(i);
+        } 
+        
+        int count = 0;
+        while(!queue.isEmpty()) {
+            int course = queue.poll();
+            count++;
+            for(int i=0; i<prerequisites.length; i++) {
+                int pre = prerequisites[i][1];
+                int ready = prerequisites[i][0];
+                if(course == pre) {
+                    indegree[ready]--;
+                    if(indegree[ready] == 0) {
+                        queue.offer(ready);
+                    }
+                }
+            }
+        }
+        return count == numCourses;
+    }
+}
+
+9.	Valid Sudoku
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        for(int i = 0; i<9; i++){
+            HashSet<Character> rows = new HashSet<Character>();
+            HashSet<Character> columns = new HashSet<Character>();
+            HashSet<Character> cube = new HashSet<Character>();
+        for (int j = 0; j < 9;j++){
+            if(board[i][j]!='.' && !rows.add(board[i][j]))
+                return false;
+            if(board[j][i]!='.' && !columns.add(board[j][i]))
+                return false;
+            int RowIndex = 3*(i/3);
+            int ColIndex = 3*(i%3);
+            if(board[RowIndex + j/3][ColIndex + j%3]!='.' && !cube.add(board[RowIndex + j/3][ColIndex + j%3]))
+                return false;
+        }
+    }
+    return true;
+    }
+    
+    public boolean isValidRows(char[][] board) {
+        boolean[] arr = new boolean[10];
+        for(int i=0; i<board.length; i++) {
+            for(int j=0; j<board.length; j++) {
+                if(board[i][j] == '.') {
+                    continue;
+                } else {
+                    int idx = board[i][j] - '0';
+                    if(arr[idx]) {
+                        return false;
+                    }
+                    arr[idx] = true;
+                }
+            }
+            arr = new boolean[10];
+        }
+        return true;
+    }
+    public boolean isValidCols(char[][] board) {
+        boolean[] arr = new boolean[10];
+        for(int i=0; i<board.length; i++) {
+            for(int j=0; j<board.length; j++) {
+                if(board[j][i] == '.') {
+                    continue;
+                } else {
+                    int idx = board[j][i] - '0';
+                    if(arr[idx]) {
+                        return false;
+                    }
+                    arr[idx] = true;
+                }
+            }
+            arr = new boolean[10];
+        }
+        return true;
+    }
+    
+    public boolean isValidSubBox(char[][] board) {
+        Set<Character> set = new HashSet<>();
+        for(int i=0; i<board.length; i++) {
+            for(int j=0; j<board.length; j++) {
+                int rowIdx = i/3;
+                int colIdx = i%3;
+                if(board[rowIdx + j/3][colIdx + j%3] != '.' && set.contains(board[rowIdx + j/3][colIdx + j%3])) {
+                    return false;
+                }
+                set.add(board[rowIdx + j/3][colIdx + j%3]);
+            }
+        }
+        return true;
+    }
+    
+}
+
+给一个dict裡面包含的一些valid words，再给一个input word，输出要判断他是否可以被auto correct，然后有哪些auto correct 的可能性
+1. 大小写错误 - . 1point3acres
+dict: ["Red", "Yellow", "Blue", "YelloW"], input: "yellow" -> return true, ["Yellow", "YelloW"]
+2. 元音错误 (aeiou) - 
+dict: ["Red", "Yellow", "Blue", "YelloW"], input: "yallow" -> return true, ["Yellow", "YelloW"]
+3. 元音重複错误 - .留学论坛-一亩-三分地
+dict: ["Red", "Yellow", "Blue", "YelloW"], input: "yaaaiilloeew" -> return true, ["Yellow", "YelloW"]
+
+case 1, 2, 3是慢慢加上去的，基本上都是用hash来解决，只是如果encode出key来查找是重点
+
+这道题可以问一个问题，如果dict包含 Yellow YellOW, 是否都要输出。还是只输出一个就够了，如果都要输出，则map应该变成 Map<String, Set<String>>,最后把set里面的所有信息都输出。
+
+class Solution {
+  public static void main(String[] args) {
+    Solution solution = new Solution();
+    Set<String> test1 = new HashSet<>();
+    test1.add("Red");
+    test1.add("Blue");
+    test1.add("Yellow");
+    String result1 = solution.correctMispelled(test1, "yelloW");
+    String result2 = solution.correctMispelled(test1, "yalloW");
+    System.out.println(result1);
+    System.out.println(result2);
+  }
+  
+
+  public String correctMispelled(Set<String> dict, String input) {
+
+    if(dict == null || dict.size() == 0) return "NONE";
+    Map<String, String> map = new HashMap<>();
+    for(String s : dict) {
+      String key = createKey(s); 
+      map.put(key, s);
+    }
+    String target = createKey(input);
+    if(map.containsKey(target)) return map.get(target);
+    else return "NONE";
+  }
+  
+  private String createKey(String s) {
+    Set<Character> aeiou = new HashSet<Character>();
+    aeiou.add('a');
+    aeiou.add('e');
+    aeiou.add('i');
+    aeiou.add('o');
+    aeiou.add('u');
+    StringBuilder sb = new StringBuilder();
+    s = s.toLowerCase();
+    for(char c : s.toCharArray()) {
+      if(aeiou.contains(c)) sb.append("a");
+      else sb.append(c);
+    }
+    return sb.toString();
+  }
+}
+
+SubSet:
+class Solution {
+  public static void main(String[] args) {
+    Map<String, String> map = new HashMap<>();
+    map.put("name", "hong");
+    map.put("age", "6");
+    map.put("sex", "female");
+    Solution solution = new Solution();
+    List<Map<String, String>> res = solution.questionOne(map);
+    for(Map<String, String> m : res) {
+      System.out.println("======================");
+      for(Map.Entry<String, String> entry : m.entrySet()) {
+        System.out.println(entry.getKey() + "   " + entry.getValue()); 
+      }
+    }
+  }
+  
+  public List<Map<String, String>> questionOne(Map<String, String> input) {
+    List<Map<String, String>> res = new ArrayList<>();
+    if(input == null || input.size() == 0) return res;
+    List<Map.Entry<String, String>> list = new ArrayList<>();
+    for(Map.Entry<String, String> entry : input.entrySet()) {
+      list.add(entry); 
+    }
+    dfs(list, res, new HashMap<>(), 0);
+    return res;
+  }
+  
+  private void dfs(List<Map.Entry<String, String>> input, List<Map<String, String>> res, Map<String, String> temp, int deep) {
+    res.add(new HashMap<>(temp));
+    for(int i=deep; i<input.size(); i++) {
+      temp.put(input.get(i).getKey(), input.get(i).getValue());
+      dfs(input, res, temp, i+1);
+      temp.remove(input.get(i).getKey());
+    }
+  }
+    
+}
+
+
+Follow up
+class Solution {
+   public static List<Map<String, String>> subsetMaptwo(Map<String, String> input1, Map<String, String> input2){
+        List<Map<String, String>> out = new ArrayList<>();
+        List<Map.Entry<String, Set<String>>> inlist = new ArrayList<>(); 
+        //create list which sotres all key and value-combination (set<String>) pairs (.e.g., name - ming, hong)
+        for (Map.Entry<String, String> entry : input1.entrySet()) {
+            Set<String> set = new HashSet<>();
+            set.add(entry.getValue());
+            set.add(input2.get(entry.getKey()));
+            Map.Entry<String, Set<String>> one = new AbstractMap.SimpleEntry<String, Set<String>>(entry.getKey(), set);
+            inlist.add(one);
+        }
+
+        dfs2(inlist, 0, new HashMap<String, String>(), out);
+        return out;
+    }
+
+    private static void dfs2(List<Map.Entry<String, Set<String>>> inlist, int layer, Map<String, String> cur, List<Map<String, String>> out) {
+        //base case
+        if (layer == inlist.size()) {
+            if (cur.size() > 0) {
+                out.add(new HashMap<String, String>(cur));
+            }
+            return;
+        }
+        
+        Map.Entry<String, Set<String>> set = inlist.get(layer);
+        for (String valuestr : set.getValue()) {
+            //add one key-pair
+            cur.put(set.getKey(), valuestr);
+            dfs2(inlist, layer + 1, cur, out);
+            //remove the key-pair
+            cur.remove(set.getKey());
+        }
+        dfs2(inlist, layer + 1, cur, out);
+    }
+
+    public static void main(String[] args) {
+        Map<String, String> map = new HashMap<>();
+        map.put("gender", "male");
+        map.put("name", "min");
+        map.put("age", "6");
+
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("gender", "female");
+        map2.put("name", "hong");
+        map2.put("age", "6");
+
+        //generate list of hashmap
+        List<Map<String, String>> out = subsetMaptwo(map, map2);
+        int index = 0;
+        //QC result
+        for (Map<String, String> curmap : out) {
+            for (Map.Entry<String, String> entry : curmap.entrySet()) {
+                System.out.println("key = " + entry.getKey() + " " + " value = " + entry.getValue());
+            }
+            System.out.println(" ************* subset number = " + (index++) + "*************");
+        }
+    }
+}
+
