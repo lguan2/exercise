@@ -1,0 +1,62 @@
+You are given a string, s, and a list of words, words, that are all of the same length. Find all starting indices of substring(s) in s that is a concatenation of each word in words exactly once and without any intervening characters.
+
+Example 1:
+
+Input:
+  s = "barfoothefoobarman",
+  words = ["foo","bar"]
+Output: [0,9]
+Explanation: Substrings starting at index 0 and 9 are "barfoor" and "foobar" respectively.
+The output order does not matter, returning [9,0] is fine too.
+Example 2:
+
+Input:
+  s = "wordgoodstudentgoodword",
+  words = ["word","student"]
+Output: []
+
+---------------------------------
+
+    public List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> res = new ArrayList<>();
+        if(s == null || words == null || words.length == 0)
+            return res;
+        int len = words[0].length(), num = words.length;
+        Map<String, Integer> expect = new HashMap<>();
+        for(String word : words){
+            expect.put(word, expect.getOrDefault(word, 0) + 1);
+        }
+        for(int i = 0; i <= s.length() - len * num; i++){
+            Map<String, Integer> seen = new HashMap<>();
+            int j = 0;
+            while(j < num){
+                String word = s.substring(i+j*len, i+(j+1)*len);
+                if(!expect.containsKey(word))
+                    break;
+                seen.put(word, seen.getOrDefault(word, 0) + 1);
+                if(seen.get(word) > expect.get(word))
+                    break;
+                j++;
+            }
+            if(j == num)
+                res.add(i);
+        }
+        return res;   
+    }
+    
+    ---------------------------------------
+    
+这个题跟一般的sliding window有所不同
+    
+Input:
+"barfoofoobarthefoobarman"
+["bar","foo","the"]
+
+Expected:
+[6,9,12]
+
+这种情况下答案是6，9，12， 而不仅仅是6
+
+本题中的j是有长度为len的word的个数，而不是一个index指针
+O(mn) m-> s.length(), n-> words.length
+
