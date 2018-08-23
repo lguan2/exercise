@@ -1,0 +1,43 @@
+Some actual twitter apis:
+
+
+POST tweet
+
+`$ curl –request POST
+–url ‘https://api.twitter.com/1.1/statuses/update.json?status=Test%20tweet%20using%20the%20POST%20statuses%2Fupdate%20endpoint’ –header ‘authorization: OAuth oauth_consumer_key=”YOUR_CONSUMER_KEY”, oauth_nonce=”AUTO_GENERATED_NONCE”, oauth_signature=”AUTO_GENERATED_SIGNATURE”, oauth_signature_method=”HMAC-SHA1”, oauth_timestamp=”AUTO_GENERATED_TIMESTAMP”, oauth_token=”USERS_ACCESS_TOKEN”, oauth_version=”1.0”’ –header ‘content-type: application/json’`
+$ `twurl -d ‘status=Test tweet using the POST statuses/update endpoint’ /1.1/statuses/update.json`
+
+
+curl 'https://api.twitter.com/1.1/statuses/update.json' -H 'origin: https://twitter.com' -H 'accept-encoding: gzip, deflate, br' -H 'x-csrf-token: 36e2f2d6941c4a89ac3ae6b12e4e68a8' -H 'accept-language: en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7' -H 'authorization: Bearer AAAAAAAAAAAAAAAAAAAAAPYXBAAAAAAACLXUNDekMxqa8h%2F40K4moUkGsoc%3DTYfbDKbT3jJPCEVnMYqilB28NHfOPqkca3qaAxGfsyKCs0wRbw' -H 'cookie: personalization_id="v1_asWJGePDC5QTz8EDb4/Vpg=="; guest_id=v1%3A152727333700792397; _ga=GA1.2.32890307.1529616272; tfw_exp=0; _gid=GA1.2.652729968.1534985350; external_referer=padhuUp37zjgzgv1mFWxJ12Ozwit7owX|0|8e8t2xd8A2w%3D; ct0=36e2f2d6941c4a89ac3ae6b12e4e68a8; dnt=1; ads_prefs="HBESAAA="; kdt=nQeGTSrveW0dNRkRaDWf3VJmiyrdGDBirwwIh43n; remember_checked_on=0; _twitter_sess=BAh7CiIKZmxhc2hJQzonQWN0aW9uQ29udHJvbGxlcjo6Rmxhc2g6OkZsYXNo%250ASGFzaHsABjoKQHVzZWR7ADoPY3JlYXRlZF9hdGwrCKqsSWRlAToMY3NyZl9p%250AZCIlMWRjMmM1YjlmODM5NTk1YmJlMTliNGIxMjU2MzUyNjQ6B2lkIiUyMmZi%250AMDA2ZWJjYTRiNjc5OGYwNmJkYmY2ODZjNDA3YToJdXNlcmwrB3ym%252F3M%253D--b6f6a8ab838c18ee7e360231d698aaeee04472d5; twid="u=1946134140"; auth_token=f917dd697d5c8a61ff8bf9d065c1c10001862fd6; csrf_same_site_set=1; csrf_same_site=1; lang=en; mbox=session#bd9edccaf272437293dbb3475f0821c9#1534987856|PC#bd9edccaf272437293dbb3475f0821c9.17_12#1536195596|check#true#1534986056' -H 'x-twitter-auth-type: OAuth2Session' -H 'pragma: no-cache' -H 'cache-control: no-cache' -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36' -H 'content-type: application/x-www-form-urlencoded; charset=UTF-8' -H 'accept: application/json, text/javascript, */*; q=0.01' -H 'referer: https://twitter.com/?lang=en' -H 'authority: api.twitter.com' -H 'x-twitter-active-user: yes' --data 'batch_mode=off&lang=en&status=testing2' --compressed
+
+response:
+
+{"created_at":"Thu Aug 23 01:04:16 +0000 2018","id":1032433307898630146,"id_str":"1032433307898630146","text":"testing2","truncated":false,"entities":{"hashtags":[],"symbols":[],"user_mentions":[],"urls":[]},"source":"\u003ca href=\"http:\/\/twitter.com\" rel=\"nofollow\"\u003eTwitter Web Client\u003c\/a\u003e","in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":null,"in_reply_to_user_id_str":null,"in_reply_to_screen_name":null,"user":{"id":1946134140,"id_str":"1946134140","name":"Lin","screen_name":"guanlin152","location":"","description":"","url":null,"entities":{"description":{"urls":[]}},"protected":false,"followers_count":0,"friends_count":3,"listed_count":0,"created_at":"Tue Oct 08 07:56:10 +0000 2013","favourites_count":1,"utc_offset":null,"time_zone":null,"geo_enabled":false,"verified":false,"statuses_count":38,"media_count":0,"lang":"en","contributors_enabled":false,"is_translator":false,"is_translation_enabled":false,"profile_background_color":"C0DEED","profile_background_image_url":"http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png","profile_background_image_url_https":"https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png","profile_background_tile":false,"profile_image_url":"http:\/\/abs.twimg.com\/sticky\/default_profile_images\/default_profile_normal.png","profile_image_url_https":"https:\/\/abs.twimg.com\/sticky\/default_profile_images\/default_profile_normal.png","profile_link_color":"1DA1F2","profile_sidebar_border_color":"C0DEED","profile_sidebar_fill_color":"DDEEF6","profile_text_color":"333333","profile_use_background_image":true,"has_extended_profile":false,"default_profile":true,"default_profile_image":true,"has_custom_timelines":false,"can_media_tag":true,"followed_by":false,"following":false,"follow_request_sent":false,"notifications":false,"business_profile_state":"none","translator_type":"none","require_some_consent":false},"geo":null,"coordinates":null,"place":null,"contributors":null,"is_quote_status":false,"retweet_count":0,"favorite_count":0,"favorited":false,"retweeted":false,"lang":"en","supplemental_language":null}
+
+
+------------------------
+
+GET timeline
+
+
+------------------------
+
+POST/PUT favorites/likes
+
+
+------------------------
+
+comments
+
+
+------------------------
+
+follow
+
+
+------------------------
+
+search
+
+
+------------------------
