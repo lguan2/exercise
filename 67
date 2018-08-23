@@ -1,0 +1,25 @@
+    public String addBinary(String a, String b) {
+        if (a == null || a.length() == 0) return b;
+        if (b == null || b.length() == 0) return a;
+        char[] aDigits = a.toCharArray();
+        char[] bDigits = b.toCharArray();
+        StringBuilder res = new StringBuilder();
+        int i = aDigits.length - 1;
+        int j = bDigits.length - 1;
+        int carry = 0;
+        while (i >= 0 || j >= 0) {
+            int cur = carry;
+            if (i >= 0) {
+                cur += aDigits[i] - '0';
+                i--;
+            }
+            if (j >= 0) {
+                cur += bDigits[i] - '0';
+                j--;
+            }
+            carry = cur / 2;
+            res.append(cur % 2);
+        }
+        if (carry != 0) res.append(carry);
+        return res.reverse().toString();
+    }
