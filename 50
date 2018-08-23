@@ -1,0 +1,21 @@
+    public double myPow(double x, int n) {
+        boolean negative = false;
+        if (n < 0) {
+            n = -n;
+            negative = true;
+        }
+        double res = helper(x, n);
+        if (negative) return 1.0 / res;
+        return res;
+    }
+
+    public double helper(double x, int n) {
+        if (n == 0) return 1.0;
+        if (n == 1) return x;
+        double temp = helper(x, n / 2);
+        if (n % 2 == 0) {
+            return temp * temp;
+        } else {
+            return temp * temp * x;
+        }
+    }
