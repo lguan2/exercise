@@ -1,0 +1,85 @@
+    Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+Example:
+
+Input: [1,1,2]
+Output:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+    -------------------------------------------------
+    public List<List<Integer>> premuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length == 0) return res;
+        boolean[] visited = new boolean[nums.length];
+        helper(nums, visited, res, new ArrayList<>());
+        return res;
+    }
+
+    public void helper(int[] nums, boolean[] visited, List<List<Integer>> res, List<Integer> list) {
+        if (list.size() == nums.length) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        int i = 0;
+        while (i < nums.length) {
+            if (!visited[i]) {
+                list.add(nums[i]);
+                visited[i] = true;
+                helper(nums, visited, res, list);
+                list.remove(list.size() - 1);
+                visited[i] = false;
+            }
+            i++;
+            while (i < nums.length && nums[i] == nums[i - 1]) {
+                i++;
+            }
+        }
+    }
+    
+    ------------------------------------
+    
+    class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length == 0) return res;
+        //别忘了sort
+        Arrays.sort(nums);
+        boolean[] visited = new boolean[nums.length];
+        helper(nums, visited, res, new ArrayList<>());
+        return res;
+    }
+
+    public void helper(int[] nums, boolean[] visited, List<List<Integer>> res, List<Integer> list) {
+        if (list.size() == nums.length) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        int i = 0;
+        while (i < nums.length) {
+            if (!visited[i]) {
+                list.add(nums[i]);
+                visited[i] = true;
+                helper(nums, visited, res, list);
+                list.remove(list.size() - 1);
+                visited[i] = false;
+                i++;
+                while (i < nums.length && nums[i] == nums[i - 1]) {
+                    i++;
+                }
+            }
+            else{
+                i++;
+                //continue;
+            }
+            // else 只能i++, if满足的时候才能找下一个不重复的
+
+        }
+    }
+}
+
+------------------
+
+AC 时间复杂度？
