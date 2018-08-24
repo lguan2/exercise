@@ -1,0 +1,72 @@
+   Given a non-negative integer represented as non-empty a singly linked list of digits, plus one to the integer.
+
+You may assume the integer do not contain any leading zero, except the number 0 itself.
+
+The digits are stored such that the most significant digit is at the head of the list.
+
+Example:
+Input:
+1->2->3
+
+Output:
+1->2->4
+
+-------------------------------
+   
+   
+   public ListNode plusOne(ListNode head) {
+        if (head == null) return null;
+        if (head.next == null) {
+            if (head.val == 9) {
+                ListNode newHead = new ListNode(1);
+                head.val = 0;
+                newHead.next = head;
+                return newHead;
+            } else {
+                head.val++;
+                return head;
+            }
+        }
+        ListNode p1 = null;
+        ListNode p2 = head;
+        while (p2 != null && p2.next != null) {
+            if (p2.val != 9) {
+                p1 = p2;
+            }
+            p2 = p2.next;
+        }
+        if (p2.val != 9) {
+            p2.val++;
+            return head;
+        }
+        if (p1 == null) {
+            ListNode newHead = new ListNode(1);
+            newHead.next = head;
+            p1 = newHead.next;
+            while (p1 != null) {
+                p1.val = 0;
+                p1 = p1.next;
+            }
+            return newHead;
+        } else {
+            p1.val++;
+            p1 = p1.next;
+            while (p1 != null) {
+                p1.val = 0;
+                p1 = p1.next;
+            }
+            return head;
+        }
+    }
+    
+    -------------------------------
+    
+    AC, 这道题主要是分析各种情况，找到last node 和last none 9 node
+    
+    9 -> 10
+    1 -> 2
+    
+    1999-> 2000
+    9999 -> 10000
+    
+    9199 -> 9200
