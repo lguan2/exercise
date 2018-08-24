@@ -1,0 +1,110 @@
+An abbreviation of a word follows the form <first letter><number><last letter>. Below are some examples of word abbreviations:
+
+a) it                      --> it    (no abbreviation)
+
+     1
+     ↓
+b) d|o|g                   --> d1g
+
+              1    1  1
+     1---5----0----5--8
+     ↓   ↓    ↓    ↓  ↓    
+c) i|nternationalizatio|n  --> i18n
+
+              1
+     1---5----0
+     ↓   ↓    ↓
+d) l|ocalizatio|n          --> l10n
+Assume you have a dictionary and given a word, find whether its abbreviation is unique in the dictionary. A word's abbreviation is unique if no other word from the dictionary has the same abbreviation.
+
+Example:
+
+Given dictionary = [ "deer", "door", "cake", "card" ]
+
+isUnique("dear") -> false
+isUnique("cart") -> true
+isUnique("cane") -> false
+isUnique("make") -> true
+
+-----------------------------
+
+class ValidWordAbbr {
+    Map<String, Set<String>> map = new HashMap<>();
+
+    public ValidWordAbbr(String[] dictionary) {
+        for(String w : dictionary){
+            
+            if(w == null || w.length() <= 2){
+                if(!map.containsKey(w))
+                    map.put(w, new HashSet<>());
+                map.get(w).add(w);
+                
+            }else{
+                String abbr = w.substring(0,1) + (w.length()-2) + w.substring(w.length()-1);
+                if(!map.containsKey(abbr)){
+                    map.put(abbr, new HashSet<>());
+                }
+                map.get(abbr).add(w);
+            }
+        }
+    }
+    
+    public boolean isUnique(String word) {
+        String abbr = null;
+        if(word == null || word.length() <= 2)
+            abbr = word;
+        else
+            abbr = word.substring(0,1) + (word.length()-2) + word.substring(word.length()-1);
+        if(!map.containsKey(abbr)){
+            return true;
+        }else{
+            if(map.get(abbr).size() > 1)
+                return false;
+            if(map.get(abbr).contains(word))
+                return true;
+            else
+                return false;
+        }
+        
+    }
+}
+
+
+-----------------------------
+两年前写的更简洁些
+public class ValidWordAbbr {
+    Map<String, Set<String>> map = new HashMap<String, Set<String>>();
+
+    public ValidWordAbbr(String[] dictionary) {
+        for(String str : dictionary){
+            String abbr = getAbbr(str);
+            if(!map.containsKey(abbr)){
+                map.put(abbr, new HashSet<String>());
+            }
+            map.get(abbr).add(str);
+        }
+    }
+
+    public boolean isUnique(String word) {
+        String abbr = getAbbr(word);
+        if(!map.containsKey(abbr)){
+            return true;
+        }else{
+            if(map.get(abbr).contains(word) && map.get(abbr).size() == 1){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+    }
+    
+    private String getAbbr(String str){
+        if(str.length() <= 2){
+            return str;
+        }else{
+            return str.substring(0, 1) + (str.length()-2) + str.substring(str.length()-1);
+        }
+        
+    }
+}
