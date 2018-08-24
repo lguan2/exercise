@@ -1,0 +1,54 @@
+Write a function to generate the generalized abbreviations of a word. 
+
+Note: The order of the output does not matter.
+
+Example:
+
+Input: "word"
+Output:
+["word", "1ord", "w1rd", "wo1d", "wor1", "2rd", "w2d", "wo2", "1o1d", "1or1", "w1r1", "1o2", "2r1", "3d", "w3", "4"]
+ 
+
+----------------------
+
+See Answer
+
+class Solution {
+    public List<String> generateAbbreviations(String word) {
+        List<String> res = new ArrayList<>();
+        helper(res, word, "", 0, 0);
+        return res;   
+    }
+    
+    public void helper(List<String> res, String word, String cur, int pos, int count){
+        if(pos == word.length()){
+            if(count > 0)
+                cur += count;
+            res.add(cur);
+        }else{
+            helper(res, word, cur, pos+1, count+1);
+            helper(res, word, cur + (count > 0 ? count : "") + word.substring(pos, pos+1), pos+1, 0);
+        }
+    }
+    
+    
+//     ["1ord","2rd","3d","4","w1rd","w2d","w3","wo1d","wo2","wor1"]
+
+//     public List<String> generateAbbreviations(String word) {
+//         List<String> res = new ArrayList<>();
+//         for(int i = 0; i < word.length(); i++){
+//             for(int j = i+1; j <= word.length(); j++){
+//                 StringBuilder sb = new StringBuilder();
+//                 sb.append(word.substring(0, i)).append(j-i).append(word.substring(j));
+//                 res.add(sb.toString());
+//             }
+//         }
+//         return res;
+        
+//     }
+}
+
+------------------------------------------
+
+注释掉的解法是不对的，因为任何一个letter都可能被缩写，不一定是连续的
+本体的思路就是对于每一个位置，有两种可能缩卸货这不缩写， 时间复杂度为 O(2^len)
