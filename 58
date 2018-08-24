@@ -1,0 +1,12 @@
+    public static int lengthOfLastWord(String s) {
+        if (s == null || s.length() == 0) return 0;
+        String[] words = s.split(" ");
+        int res = 0;
+        for (int i = words.length - 1; i >= 0; i--) {
+            if (words[i].matches("[a-zA-Z]")) {
+                res = words[i].length();
+                break;
+            }
+        }
+        return res;
+    }
