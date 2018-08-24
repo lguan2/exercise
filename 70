@@ -1,0 +1,11 @@
+    public static int climbStairs(int n) {
+        if (n <= 2) return n;
+        int last1 = 1;
+        int last2 = 2;
+        for (int i = 3; i <= n; i++) {
+            int temp = last1 + last2;
+            last1 = last2;
+            last2 = temp;
+        }
+        return last2;
+    }
