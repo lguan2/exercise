@@ -1,3 +1,23 @@
+    Given a 2D board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+Example:
+
+board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+
+Given word = "ABCCED", return true.
+Given word = "SEE", return true.
+Given word = "ABCB", return false.
+
+------------------------------
+    
+    
     int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
     public boolean exist(char[][] board, String word) {
@@ -24,7 +44,7 @@
         visited[x][y] = true;
         for (int[] dir : dirs) {
             int i = x + dir[0];
-            int j = x + dir[1];
+            int j = y + dir[1];
             if (helper(board, word, i, j, visited, pos + 1)) {
                 return true;
             }
@@ -32,4 +52,8 @@
         visited[x][y] = false;
         return false;
     }
+    
+    ------------------------------
+    
+    AC 时间复杂度 O(kmn)
 
