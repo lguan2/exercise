@@ -1,0 +1,126 @@
+    Given an absolute path for a file (Unix-style), simplify it.
+
+For example,
+path = "/home/", => "/home"
+path = "/a/./b/../../c/", => "/c"
+
+Corner Cases:
+
+Did you consider the case where path = "/../"?
+In this case, you should return "/".
+Another corner case is the path might contain multiple slashes '/' together, such as "/home//foo/".
+In this case, you should ignore redundant slashes and return "/home/foo".
+
+-------------------------------
+有不少错误的解法
+    public String simplifyPath(String path) {
+        if (path == null || path.length() == 0) return path;
+        StringBuilder reverseSb = new StringBuilder();
+        String[] dirs = path.split("/");
+        Stack<String> stack = new Stack<>();
+        for (String dir : dirs) {
+            if (dir.equals(".")) {
+                continue;
+            } else if (dir.equals("..")) {
+                stack.pop();
+            } else {
+                stack.push(dir);
+            }
+        }
+        while (!stack.isEmpty()) {
+            reverseSb.append(stack.pop());
+            reverseSb.append("/");
+        }
+        if (reverseSb.toString().equals("")) {
+            return "/";
+        }
+        return reverseSb.reverse().toString();
+    }
+    
+    -------------------------------------------
+    
+    修正版
+    
+        public String simplifyPath(String path) {
+        if (path == null || path.length() == 0) return path;
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        while(i < path.length()){
+            if(path.charAt(i) == '/'){
+                i++;
+            }else{
+                path = path.substring(i);
+                break;
+            }
+        }
+        String[] dirs = path.split("[/]+");
+        System.out.println(Arrays.toString(dirs));
+        // 这个不行，会有empty string
+        //String[] dirs = path.split("/");
+
+        Stack<String> stack = new Stack<>();
+        for (String dir : dirs) {
+            if (dir.equals(".")) {
+                continue;
+            } else if (dir.equals("..")) {
+                if(!stack.isEmpty()){
+                    stack.pop();
+                }
+            } else {
+                stack.push(dir);
+            }
+        }
+        if(stack.isEmpty())
+            return "/";
+        while(!stack.isEmpty()){
+            sb.insert(0, stack.pop());
+            sb.insert(0, '/');
+        }
+        return sb.toString();
+        // while (!stack.isEmpty()) {
+        //     reverseSb.append(stack.pop());
+        //     reverseSb.append("/");
+        // }
+        // System.out.println(reverseSb.toString());
+        // if (reverseSb.toString().equals("")) {
+        //     return "/";
+        // }
+        // return reverseSb.reverse().toString();
+        // 不能直接reverse， dir 的name也会被翻转
+    }
+    
+   ------------------------------
+   
+   简洁版
+   
+       public String simplifyPath(String path) {
+        String[] dirs = path.split("/");
+        Stack<String> stack = new Stack<String>();
+        for(String dir : dirs){
+            if(dir.equals(".") || dir.equals("")){
+                continue;
+            }else if(dir.equals("..")){
+                if(!stack.isEmpty()){
+                    stack.pop();
+                }
+            }else{
+                stack.push(dir);
+            }
+        }
+        if(stack.isEmpty()){
+            return "/";
+        }
+        StringBuilder sb = new StringBuilder();
+        while(!stack.isEmpty()){
+            sb.insert(0, "/" + stack.pop());
+        }
+        
+        return sb.toString();
+        
+    }
+    
+    ---------------------------
+AC, 问题比较多
+1） string split, 如果是by"/", 则trailing不能handle, 多个连续的‘/'也不能handle
+2) 改用了正则表达"[/]+", 但是仍不能handle trailing
+3) 不能直接翻转stringbuilder，因为那样dir名字也会翻转
