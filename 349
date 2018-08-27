@@ -1,0 +1,20 @@
+    public int[] intersections(int[] nums1, int[] nums2) {
+        if (nums1 == null || nums1.length == 0 || nums2 == null || nums2.length == 0) return new int[] {};
+        Set<Integer> set1 = new HashSet<>();
+        Set<Integer> inters = new HashSet<>();
+        for (int n1 : nums1)
+            set1.add(n1);
+        for (int n2 : nums2) {
+            if (set1.contains(n2)) {
+                inters.add(n2);
+            }
+        }
+        int[] res = new int[inters.size()];
+        Iterator<Integer> iter = inters.iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            res[i] = iter.next();
+            i++;
+        }
+        return res;
+    }
