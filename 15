@@ -1,0 +1,39 @@
+    // check two som with duplicates
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if(nums == null || nums.length <= 2)
+            return res;
+        int len = nums.length;
+        int i = 0;
+        Arrays.sort(nums);
+        while(i <= len-3){
+            if(i-1 >= 0 && nums[i-1] == nums[i]){
+                i++;
+                continue;
+            }
+            int j = i+1, k = len-1;
+            while(j < k){
+                if(j-1 > i && nums[j-1] == nums[j]){
+                    j++;
+                    continue;
+                }
+                if (k + 1 < len && nums[k + 1] == nums[k]) {
+                    k--;
+                    continue;
+                }
+                int check = nums[i] + nums[j] + nums[k];
+                if(check == 0){
+                    // create an arraylist with elements
+                    res.add(new ArrayList<Integer>(
+                            Arrays.asList(i, j, k)));
+                    i++;
+                    j--;
+                }else if(check < 0){
+                    i++;
+                }else{
+                    j--;
+                }
+            }  
+        }
+        return res;    
+    }
