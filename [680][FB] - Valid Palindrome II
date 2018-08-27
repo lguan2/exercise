@@ -1,0 +1,45 @@
+Given a non-empty string s, you may delete at most one character. Judge whether you can make it a palindrome.
+
+Example 1:
+Input: "aba"
+Output: True
+Example 2:
+Input: "abca"
+Output: True
+Explanation: You could delete the character 'c'.
+
+----------------------
+
+    public boolean validPalindrome(String s) {
+        if(s == null || s.length() <= 1)
+            return true;
+        int i = 0, j = s.length()-1;
+        while(i < j){
+            if(s.charAt(i) == s.charAt(j)){
+                i++;
+                j--;
+            }else{
+                break;
+            }
+        }
+        if(j <= i)
+            return true;
+        return isPali(s, i+1, j) || isPali(s, i, j-1); 
+    }
+    
+    public boolean isPali(String s, int i, int j){
+        while(i < j){
+            if(s.charAt(i) == s.charAt(j)){
+                i++;
+                j--;
+            }else{
+                return false;
+            }
+        }
+        return true;  
+    }
+ ----------------------
+ 
+ See Answer
+ 
+ 思路是两个指针比较字符是否相同，如果发现了一个不一样的字符，这有一次机会跨过那个字符继续比较
