@@ -26,3 +26,20 @@ The range of numbers in the array is [-1000, 1000] and the range of the integer 
 AC, no idea at beginning. 本题是重要思路
 sum[0,i-1] + sum[i,j] = curSum
 如果curSum - sum[0,i-1] = k, 则证明sum[i,j] = k
+
+---------------------
+
+    // space: O(n), time: O(n)
+    public static int subarraySum(int[] nums, int k) {
+        int res = 0, sum = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        for (int num : nums) {
+            sum += num;
+            if (map.containsKey(sum - k)) {
+                res += map.get(sum - k);
+            }
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        return res;
+    }
