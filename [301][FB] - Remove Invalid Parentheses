@@ -1,0 +1,70 @@
+Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
+
+Note: The input string may contain letters other than the parentheses ( and ).
+
+Example 1:
+
+Input: "()())()"
+Output: ["()()()", "(())()"]
+Example 2:
+
+Input: "(a)())()"
+Output: ["(a)()()", "(a())()"]
+Example 3:
+
+Input: ")("
+Output: [""]
+------------------------
+
+    public List<String> removeInvalidParentheses(String s) {
+        //if(s == null || s.length() == 0)
+        if(s == null)
+            return new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        // 需要去掉的左括号和右括号的个数
+        int rmL = 0, rmR = 0;
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) == '('){
+                rmL++;
+            }else if(s.charAt(i) == ')'){
+                if(rmL > 0)
+                    rmL--;
+                else
+                    rmR++;
+            }
+        }
+
+
+        dfs(s, rmL, rmR, 0, 0, set, new StringBuilder());
+        return new ArrayList<String>(set);
+    
+    }
+    
+            public void dfs(String s, int rmL, int rmR, int open, int pos, Set<String> set, StringBuilder cur){
+            if(rmL < 0 || rmR < 0 || open < 0)
+                return;
+            // 注意结束条件， pos == len的时候一定结束了，有可能加到set里
+            if(pos == s.length()){
+                if(rmL == 0 && rmR == 0 && open == 0){
+                    set.add(cur.toString());
+                }   
+                return;
+            }
+
+            int len = cur.length();
+            char c = s.charAt(pos);
+            if(c == '('){
+                dfs(s, rmL-1, rmR, open, pos+1, set, cur);
+                dfs(s, rmL, rmR, open+1, pos+1, set, cur.append('('));
+            }else if(c == ')'){
+                dfs(s, rmL, rmR-1, open, pos+1, set, cur);
+                dfs(s, rmL, rmR, open-1, pos+1, set, cur.append(')'));
+            }else{
+                dfs(s, rmL, rmR, open, pos+1, set, cur.append(c));
+            }
+            cur.setLength(len);
+            
+        }
+     -------------------------------
+     
+     属于没有思路的题 O(2^n)
