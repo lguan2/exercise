@@ -1,0 +1,20 @@
+    public int minRooms(Interval[] intervals) {
+        int res = 0;
+        if (intervals == null || intervals.length == 0) return res;
+        PriorityQueue<Interval> heap = new PriorityQueue<>((a, b) -> (a.end - b.end));
+        Arrays.sort(intervals, (a, b) -> (a.start - b.start));
+
+        for (int i = 0; i < intervals.length; i++) {
+            if (heap.isEmpty()) {
+                heap.add(intervals[i]);
+            } else {
+                while (!heap.isEmpty() && intervals[i].start >= heap.peek().end) {
+                    heap.poll();
+                }
+                heap.add(intervals[i]);
+            }
+            res = Math.max(res, heap.size());
+
+        }
+        return res;
+    }
