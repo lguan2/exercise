@@ -1,0 +1,25 @@
+    public static List<Integer> findAnagrams(String s, String p) {
+        List<Integer> res = new ArrayList<>();
+        if (s == null || p == null || s.length() < p.length()) return res;
+        Map<Character, Integer> expect = new HashMap<>();
+        Map<Character, Integer> seen = new HashMap<>();
+        for (int i = 0; i < p.length(); i++) {
+            expect.put(p.charAt(i), expect.getOrDefault(p.charAt(i), 0) + 1);
+        }
+        int count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            seen.put(c, seen.getOrDefault(c, 0) + 1);
+            if (expect.containsKey(c) && expect.get(c) >= seen.get(c)) count++;
+            if (i >= p.length()) {
+                char pre = s.charAt(i - p.length());
+                seen.put(pre, seen.get(pre) - 1);
+                if (expect.containsKey(pre) && expect.get(pre) > seen.get(pre)) count--;
+            }
+            if (count == p.length()) {
+                res.add(i - p.length() + 1);
+            }
+
+        }
+        return res;
+    }
