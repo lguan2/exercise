@@ -1,0 +1,65 @@
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+You may not modify the values in the list's nodes, only nodes itself may be changed.
+
+Example 1:
+
+Given 1->2->3->4, reorder it to 1->4->2->3.
+Example 2:
+
+Given 1->2->3->4->5, reorder it to 1->5->2->4->3.
+
+--------------------------------
+    
+    public void reorderList(ListNode head) {
+        if(head == null || head.next == null || head.next.next == null)
+            return;
+        ListNode pre = null;
+        ListNode fast = head;
+        ListNode slow = head;
+        while(fast != null && fast.next != null){
+            pre = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode head2 = null;
+        // 记住要把两个list中间断开，记录pre或者直接断slow根据奇数偶数不同
+        if(fast == null){
+            pre.next = null;
+            head2 = slow;
+        }else{
+            head2 = slow.next;
+            slow.next = null;
+        }
+        head2 = reverseList(head2);
+        
+        
+        ListNode p1 = head;
+        ListNode p2 = head2;     
+        while(p1 != null && p2 != null){
+            ListNode t1 = p1.next;
+            ListNode t2 = p2.next;
+            p1.next = p2;
+            p2.next = t1;
+            p1 = t1;
+            p2 = t2;
+        }  
+    }
+    
+    public ListNode reverseList(ListNode head) {
+        if(head == null)
+            return null;
+        ListNode next = head.next;
+        if(next != null){
+            ListNode newHead = reverseList(head.next);
+            head.next = null;
+            next.next = head;
+            return newHead;
+        }
+        return head;
+    }
+    
+ ------------------------
+ 
+ 切记要将两个list中间断开
