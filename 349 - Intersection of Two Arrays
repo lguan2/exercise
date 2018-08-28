@@ -1,3 +1,17 @@
+Given two arrays, write a function to compute their intersection.
+
+Example 1:
+
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2]
+Example 2:
+
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [9,4]
+
+------------------------------
+    
+    
     public int[] intersections(int[] nums1, int[] nums2) {
         if (nums1 == null || nums1.length == 0 || nums2 == null || nums2.length == 0) return new int[] {};
         Set<Integer> set1 = new HashSet<>();
@@ -18,3 +32,8 @@
         }
         return res;
     }
+    
+    ----------------
+    
+    two set, time: O(n), space O(n)
+    binary search, time: O(nlogn), space: O(1)
