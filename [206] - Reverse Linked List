@@ -1,0 +1,47 @@
+Reverse a singly linked list.
+
+Example:
+
+Input: 1->2->3->4->5->NULL
+Output: 5->4->3->2->1->NULL
+Follow up:
+
+A linked list can be reversed either iteratively or recursively. Could you implement both?
+
+
+---------------------------------
+recursion:
+
+    public ListNode reverseList(ListNode head) {
+        if(head == null)
+            return null;
+        ListNode next = head.next;
+        if(next != null){
+            ListNode newHead = reverseList(head.next);
+            head.next = null;
+            next.next = head;
+            return newHead;
+        }
+        return head;
+    }
+    
+ iterative:
+ 
+     public ListNode reverseList(ListNode head) {
+        if(head == null || head.next == null)
+            return head;
+        ListNode pre = head;
+        ListNode p1 = head.next;
+        while(p1 != null){
+            ListNode temp = p1.next;
+            p1.next = pre;
+            pre = p1;
+            p1 = temp;      
+        }
+        head.next = null;
+        return pre;
+    }
+ ----------------------------
+ 
+ see answer for recursion
+ iterative 要注意的地方是要把head的next断开
