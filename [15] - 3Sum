@@ -76,10 +76,10 @@ A solution set is:
                     j++;
                     continue;
                 }
-                if (k + 1 < len && nums[k + 1] == nums[k]) {
-                    k--;
-                    continue;
-                }
+                //if (k + 1 < len && nums[k + 1] == nums[k]) {
+                //    k--;
+                //    continue;
+                //}
                 int check = nums[i] + nums[j] + nums[k];
                 if(check == 0){
                     // create an arraylist with elements
@@ -99,5 +99,5 @@ A solution set is:
     }
     
 -----------------------------------------
-AC - 主要是处理duplicate , i,j,k都要处理
+AC - 主要是处理duplicate , i,j,k都要处理, 但是其实k是不需要处理的，因为i移动到下一个大的了，j也移动到下一个大的了，k一定会变的
 
