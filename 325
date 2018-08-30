@@ -1,0 +1,24 @@
+    public static int maxSubarrayLen(int[] nums, int k) {
+        int[] sum = new int[nums.length];
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0) {
+                sum[i] = nums[i];
+            } else {
+                sum[i] = sum[i - 1] + nums[i];
+            }
+            if (!map.containsKey(sum[i])) {
+                map.put(sum[i], i);
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int residue = sum[i] - k;
+            if (map.containsKey(residue) && map.get(residue) <= i) {
+                res = Math.max(res, i - map.get(residue));
+            }
+        }
+        return res;
+
+    }
