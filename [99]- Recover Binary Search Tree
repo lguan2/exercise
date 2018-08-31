@@ -1,0 +1,68 @@
+Two elements of a binary search tree (BST) are swapped by mistake.
+
+Recover the tree without changing its structure.
+
+Example 1:
+
+Input: [1,3,null,null,2]
+
+   1
+  /
+ 3
+  \
+   2
+
+Output: [3,1,null,null,2]
+
+   3
+  /
+ 1
+  \
+   2
+Example 2:
+
+Input: [3,1,4,null,null,2]
+
+  3
+ / \
+1   4
+   /
+  2
+
+Output: [2,1,4,null,null,3]
+
+  2
+ / \
+1   4
+   /
+  3
+-----------------------------------
+class Solution {
+    TreeNode pre = null;
+    TreeNode first = null;
+    TreeNode second = null;
+    public void recoverTree(TreeNode root) {
+        helper(root);
+        int temp = first.val;
+        first.val = second.val;
+        second.val = temp;
+        
+    }
+    
+    public void helper(TreeNode root){
+        if(root == null)
+            return;
+        helper(root.left);
+        if(pre != null && first == null && root.val < pre.val){
+            first = pre;
+        }
+        if(first != null && root.val < pre.val){
+            second = root;
+        }
+        pre = root;  
+        helper(root.right);
+    }
+}
+---------------------------
+
+AC 本质是inorder traversal, 要利用BST 的性质
