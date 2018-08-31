@@ -1,0 +1,63 @@
+Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+
+Example 1:
+
+Input: "(()"
+Output: 2
+Explanation: The longest valid parentheses substring is "()"
+Example 2:
+
+Input: ")()())"
+Output: 4
+Explanation: The longest valid parentheses substring is "()()"
+-------------------------------
+
+    public int longestValidParentheses(String s) {
+        Stack<Integer> stack = new Stack<>();
+        int left = -1;
+        int max = 0;
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) == '('){
+                stack.push(i);
+            }else{
+                if(stack.isEmpty()){
+                    left = i;
+                }else{
+                    stack.pop();
+                    if(stack.isEmpty()){
+                        max = Math.max(max, i-left);
+                    }else{
+                        max = Math.max(max, i-stack.peek());
+                    }
+                }
+            }
+        }
+        return max;
+        
+    }
+    --------------------
+    
+    DP
+    
+        // dp[i] -> ending and including i, what's the longest valid parentheses length
+    // dp[0] = 1;
+    // 思路是去掉dp[i-1]部分，找到之前的一个'('来匹配当前的')'
+    public int longestValidParentheses(String s) {
+        if(s == null || s.length() <= 1)
+            return 0;
+        int len = s.length();
+        int[] dp = new int[len+1];
+        dp[0] = 0;
+        int max = 0;
+        for(int i = 1; i <= len; i++){
+            int j = i-dp[i-1]-1;
+            if(s.charAt(i-1) == '(' || j-1 < 0 || s.charAt(j-1) == ')'){
+                dp[i] = 0;
+            }else{
+                dp[i] = dp[j-1] + dp[i-1] + 2; 
+                max = Math.max(max, dp[i]);
+            }
+        }
+        return max;
+        
+    }
