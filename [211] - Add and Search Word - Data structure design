@@ -1,0 +1,164 @@
+Design a data structure that supports the following two operations:
+
+void addWord(word)
+bool search(word)
+search(word) can search a literal word or a regular expression string containing only letters a-z or .. A . means it can represent any one letter.
+
+Example:
+
+addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -> false
+search("bad") -> true
+search(".ad") -> true
+search("b..") -> true
+-------------------------------
+class WordDictionary {
+    class TrieNode{
+        char val;
+        TrieNode[] children = new TrieNode[26];
+        boolean isLeaf = false;
+        
+        public TrieNode(){}
+        public TrieNode(char val){
+            this.val = val;
+        }
+    }
+    
+    TrieNode root = new TrieNode();
+
+    /** Initialize your data structure here. */
+    public WordDictionary() {
+         
+    }
+    
+    /** Adds a word into the data structure. */
+    public void addWord(String word) {
+        TrieNode p = root;
+        for(int i = 0; i < word.length(); i++){
+            char c = word.charAt(i);
+            if(p.children[c - 'a'] == null){
+                p.children[c - 'a'] = new TrieNode(c);
+            }
+            p = p.children[c - 'a'];
+            if(i == word.length()-1){
+                p.isLeaf = true;
+            }
+        }
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    public boolean search(String word) {
+        TrieNode p = root;
+        return helper(p, word, 0);
+
+        
+    }
+    
+    public boolean helper(TrieNode p, String word, int i){
+        if(i == word.length())
+            return false;
+        char c = word.charAt(i);
+        if(c != '.'){
+            if(p.children[c-'a'] == null)
+                return false;
+            if(i == word.length()-1){
+                if(!p.children[c-'a'].isLeaf){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+                
+            p = p.children[c-'a'];
+            return helper(p, word, i+1);
+        }else{
+            for(TrieNode node : p.children){
+                if(node != null){
+                    if(i == word.length()-1){
+                        if(node.isLeaf)
+                            return true;
+                        // else
+                        //     return false;
+                    }
+                    if(helper(node, word, i+1))
+                        return true;
+                }
+            }
+
+        }
+        return false;
+    }
+}
+
+----------------------------
+
+class WordDictionary {
+    class TrieNode{
+        TrieNode[] children = new TrieNode[26];
+        char value;
+        boolean end = false;
+        public TrieNode(){
+        }
+        public TrieNode(char value){
+            this.value = value;
+        }  
+    }
+    
+    TrieNode root;
+    /** Initialize your data structure here. */
+    public WordDictionary() {
+        this.root = new TrieNode();
+    }
+    
+    /** Adds a word into the data structure. */
+    public void addWord(String word) {
+        TrieNode p = root;
+        for(int i = 0; i < word.length(); i++){
+            char cur = word.charAt(i);
+            if(p.children[cur - 'a'] == null){
+                p.children[cur - 'a'] = new TrieNode(cur);
+                if(i == word.length()-1)
+                    p.children[cur-'a'].end = true;
+            }
+            p = p.children[cur-'a'];
+        }  
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    public boolean search(String word) {
+        return helper(word, 0, root);
+    }
+    
+    private boolean helper(String word, int cur, TrieNode p){
+        // 必须先判断是否p是null,cur>len
+        if(cur > word.length() || p == null)
+            return false;
+        if(cur  == word.length() && !p.end)
+            return false;
+        if(cur == word.length() && p.end)
+            return true;
+        
+        
+        char c = word.charAt(cur);
+        if(c != '.'){
+            if(p.children[c-'a'] != null){
+                return helper(word, cur+1, p.children[c-'a']);
+            }else{
+                return false;
+            }
+        }else{
+            for(TrieNode child : p.children){
+                if(helper(word, cur+1, child))
+                    return true;
+            }
+        }
+        return false;   
+    }
+}
+
+------------------------------------
+第二次做的不好，注意事项：
+1）helper开始的时候一定要先判断是不是已经超过了数组的长度
+2）p是不是null可以在一开始的时候判断
