@@ -1,0 +1,51 @@
+Given a n x n matrix where each of the rows and columns are sorted in ascending order, find the kth smallest element in the matrix.
+
+Note that it is the kth smallest element in the sorted order, not the kth distinct element.
+
+Example:
+
+matrix = [
+   [ 1,  5,  9],
+   [10, 11, 13],
+   [12, 13, 15]
+],
+k = 8,
+
+return 13.
+Note: 
+You may assume k is always valid, 1 ≤ k ≤ n2.
+---------------
+    class Cell{
+        int x;
+        int y;
+        int val;
+        public Cell(int x, int y, int val){
+            this.x = x;
+            this.y = y;
+            this.val = val;
+        }
+    }
+    public int kthSmallest(int[][] matrix, int k) {
+        int m = matrix.length, n = matrix[0].length;
+        PriorityQueue<Cell> heap = new PriorityQueue<>((a, b) -> (a.val - b.val));
+        for(int i = 0; i < n; i++){
+            heap.add(new Cell(0, i, matrix[0][i]));
+        }
+        int count = 0;
+        while(!heap.isEmpty()){
+            Cell cur = heap.poll();
+            count++;
+            if(count == k)
+                return cur.val;
+            if(cur.x + 1 < m){
+                heap.add(new Cell(cur.x+1, cur.y, matrix[cur.x+1][cur.y]));
+            }
+            
+        }
+        return -1;
+        
+        
+    }
+    n*mlogn
+  ---------------------------
+  Pending Binary Searh, 找到的数可能不存在与matrix里啊？？？
