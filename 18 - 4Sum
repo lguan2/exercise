@@ -1,0 +1,106 @@
+Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
+
+Note:
+
+The solution set must not contain duplicate quadruplets.
+
+Example:
+
+Given array nums = [1, 0, -1, 0, -2, 2], and target = 0.
+
+A solution set is:
+[
+  [-1,  0, 0, 1],
+  [-2, -1, 1, 2],
+  [-2,  0, 0, 2]
+]
+---------------------------------------
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        if(nums == null || nums.length < 4)
+            return res;
+        Arrays.sort(nums);
+        int i = 0;
+        while(i < nums.length-3){
+            while(i < nums.length-3 && i-1 >= 0 && nums[i] == nums[i-1])
+                i++;
+            int j = i+1;
+            while(j < nums.length-2){
+                while(j < nums.length-2 && j-1 >= i+1 && nums[j] == nums[j-1])
+                    j++;
+                int k = j+1, l = nums.length-1;
+                while(k < l){
+                    while(k < l && k-1 >= j+1 && nums[k] == nums[k-1])
+                        k++;
+                    if(k == l)
+                        break;
+                    int cur = nums[i] + nums[j] + nums[k] + nums[l];
+                    if(cur == target){
+                        List<Integer> list = new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[k], nums[l]));
+                        res.add(list);
+                        k++;
+                        l--;
+                    }else if(cur < target){
+                        k++;
+                    }else{
+                        l--;
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
+        return res;
+
+        
+    }
+      注意移动k的时候，不能超过l
+  -------------------------------------
+
+  a little bit cleaner solution
+  
+      public List<List<Integer>> fourSum(int[] num, int target) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if(num == null || num.length <4){
+            return result;
+        }
+        Arrays.sort(num);
+        
+        for(int i = 0; i < num.length - 3; i++){
+            if(i > 0 && num[i] == num[i-1]){
+                continue;
+            }
+            for(int j = i+1; j< num.length - 2; j++){
+                if(j > i+1 && num[j] == num[j-1]){
+                    continue;
+                }
+                int k = j+1;
+                int l = num.length-1;
+                while( k < l){
+                    if(k > j+1 && num[k] == num[k-1]){
+                        k++;
+                        continue;
+                    }
+                    if(num[i] + num[j] + num[k] + num[l] == target){
+                        List<Integer> list = new ArrayList<Integer>();
+                        list.add(num[i]);
+                        list.add(num[j]);
+                        list.add(num[k]);
+                        list.add(num[l]);
+                        result.add(list);
+                        k++;
+                        l--;
+                    }
+                    else if(num[i] + num[j] + num[k] + num[l] < target){
+                        k++;
+                    }
+                    else{
+                        l--;
+                    }
+                }
+            }
+        }
+        return result;
+        
+    }
