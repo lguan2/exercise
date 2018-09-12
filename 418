@@ -1,0 +1,33 @@
+    public static int wordsTyping(String[] sentences, int rows, int cols) {
+        int res = 0;
+        int curRow = 0, curCol = 0, index = 0;
+        // boolean eof = false;
+        while (true) {
+            index = index % sentences.length;
+            if (curCol + sentences[index].length() <= cols) {
+                curCol = curCol + sentences[index].length() + 1;
+                if (index == sentences.length - 1) {
+                    res++;
+                }
+            } else {
+                if (curRow == rows - 1) {
+                    // eof = true;
+                    break;
+                } else {
+                    curCol = 0;
+                    curRow++;
+                    if (sentences[index].length() > cols) {
+                        // eof = true;
+                        break;
+                    } else {
+                        curCol = curCol + sentences[index].length() + 1;
+                        if (index == sentences.length - 1) {
+                            res++;
+                        }
+                    }
+                }
+            }
+            index++;
+        }
+        return res;
+    }
