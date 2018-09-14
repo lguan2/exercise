@@ -1,0 +1,75 @@
+    public static String nextClosestTime(String time) {
+
+        char[] cur = time.replace(":", "").toCharArray();
+        char[] digits = time.replace(":", "").toCharArray();
+        char min = digits[0];
+        Arrays.sort(digits);
+        char[] res = Arrays.copyOf(cur, 4);
+
+        int i = 3;
+        for (int j = 0; j < digits.length; j++) {
+            if (digits[j] > cur[i]) {
+                res[i] = digits[j];
+                if (isValid(res)) {
+                    return generateRes(res);
+                } else {
+                    break;
+                }
+            }
+        }
+        res[i] = min;
+
+        i = 2;
+        for (int j = 0; j < digits.length; j++) {
+            if (digits[j] > cur[i]) {
+                res[i] = digits[j];
+                if (isValid(res)) {
+                    return generateRes(res);
+                } else {
+                    break;
+                }
+            }
+        }
+        res[i] = min;
+
+        i = 1;
+        for (int j = 0; j < digits.length; j++) {
+            if (digits[j] > cur[i]) {
+                res[i] = digits[j];
+                if (isValid(res)) {
+                    return generateRes(res);
+                } else {
+                    break;
+                }
+            }
+        }
+        res[i] = min;
+
+        i = 0;
+        for (int j = 0; j < digits.length; j++) {
+            if (digits[j] > cur[i]) {
+                res[i] = digits[j];
+                if (isValid(res)) {
+                    return generateRes(res);
+                } else {
+                    break;
+                }
+            }
+        }
+        res[i] = min;
+        return generateRes(res);
+
+    }
+
+    public static boolean isValid(char[] res) {
+        int hh = (res[0] - '0') * 10 + (res[1] - '0');
+        int mm = (res[2] - '0') * 10 + (res[3] - '0');
+        if (hh >= 0 && hh <= 24 && mm >= 0 && mm <= 60) return true;
+        return false;
+    }
+
+    public static String generateRes(char[] res) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(res[0]).append(res[1]).append(":").append(res[2]).append(res[3]);
+        return sb.toString();
+    }
