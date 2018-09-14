@@ -135,3 +135,73 @@ board[i][j] will be a permutation of [0, 1, 2, 3, 4, 5].
 -----------------------------
 
 思路就是BFS, 主要是size的更改step++的时机，因为有的时候发现访问过就要返回了，但是也要check是不是0
+
+---------------------------------
+
+更为general的做法
+
+class Solution {
+
+    public int slidingPuzzle(int[][] board) {
+        int row = board.length;
+        int col = board[0].length;
+        StringBuilder goalSb = new StringBuilder();
+        for(int i = 1; i < row * col; i++){
+            goalSb.append(i);
+        }
+        goalSb.append(0);
+        String goal = goalSb.toString();
+
+        StringBuilder startSb = new StringBuilder();
+        for (int i = 0; i < col*row; i++) {
+            startSb.append(board[i / col][i % col]);
+        }
+        Queue<String> queue = new LinkedList<>();
+        queue.add(startSb.toString());
+        Set<String> visited = new HashSet<>();
+        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+        int steps = 0;
+        int size = queue.size();
+        while (!queue.isEmpty()){
+            String cur = queue.poll();
+            size--;
+            if (cur.equals(goal)) {
+                return steps;
+            }
+            if (visited.contains(cur)) {
+                if (size == 0) {
+                    size = queue.size();
+                    steps++;
+                }
+                continue;
+            }
+            visited.add(cur);
+            int zeroIndex = cur.indexOf('0');
+
+            int x = zeroIndex/col;
+            int y = zeroIndex%col;
+
+            for(int[] dir : dirs){
+                int i = x+dir[0];
+                int j = y+dir[1];
+                if(i < 0 || j < 0 || i == row || j == col)
+                    continue;
+                String next = swap(cur, zeroIndex, i*col + j);
+                queue.add(next);
+            }
+            if (size == 0) {
+                size = queue.size();
+                steps++;
+            }
+        }
+
+        return -1;
+    }
+
+    private String swap(String s, int i, int j) {
+        StringBuilder sb = new StringBuilder(s);
+        sb.setCharAt(i, s.charAt(j));
+        sb.setCharAt(j, s.charAt(i));
+        return sb.toString();
+    }
+}
