@@ -1,0 +1,31 @@
+    public static boolean areSentencesSimilarTwo(String[] words1, String[] words2, String[][] pairs) {
+        if (words1.length != words2.length || pairs.length == 0) return false;
+        Map<String, Set<String>> graph = new HashMap<>();
+        int len = words1.length;
+        for (int i = 0; i < pairs.length; i++) {
+            if (!graph.containsKey(pairs[i][0])) graph.put(pairs[i][0], new HashSet<>());
+            if (!graph.containsKey(pairs[i][1])) graph.put(pairs[i][1], new HashSet<>());
+            graph.get(pairs[i][0]).add(pairs[i][1]);
+            graph.get(pairs[i][1]).add(pairs[i][0]);
+        }
+        for (int i = 0; i < len; i++) {
+            if (!dfs(words1[i], words2[i], graph, new HashSet<>())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean dfs(String s1, String s2, Map<String, Set<String>> graph, Set<String> visited) {
+        if (s1.equals(s2)) return true;
+        for (String next : graph.get(s1)) {
+            if (!visited.contains(next)) {
+                visited.add(next);
+                if (dfs(next, s2, graph, visited)) {
+                    return true;
+                }
+                visited.remove(next);
+            }
+        }
+        return false;
+    }
