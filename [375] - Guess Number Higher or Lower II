@@ -1,0 +1,50 @@
+We are playing the Guess Game. The game is as follows:
+
+I pick a number from 1 to n. You have to guess which number I picked.
+
+Every time you guess wrong, I'll tell you whether the number I picked is higher or lower.
+
+However, when you guess a particular number x, and you guess wrong, you pay $x. You win the game when you guess the number I picked.
+
+Example:
+
+n = 10, I pick 8.
+
+First round:  You guess 5, I tell you that it's higher. You pay $5.
+Second round: You guess 7, I tell you that it's higher. You pay $7.
+Third round:  You guess 9, I tell you that it's lower. You pay $9.
+
+Game over. 8 is the number I picked.
+
+You end up paying $5 + $7 + $9 = $21.
+Given a particular n ≥ 1, find out how much money you need to have to guarantee a win.
+------------------------
+
+class Solution {
+    int[][] dp;
+    public int getMoneyAmount(int n) {
+        // 不能从0开始，因为涉及到加钱的问题，0加$0, 1加$1
+        // dp = new int[n][n];
+        // return getRangeMoneyAmount(0, n-1);
+        dp = new int[n+1][n+1];
+        return getRangeMoneyAmount(1, n);
+    }
+    
+    public int getRangeMoneyAmount(int lower, int upper){
+        if(lower >= upper)
+            return 0;
+        if(dp[lower][upper] != 0)
+            return dp[lower][upper];
+        int maximum = Integer.MAX_VALUE;
+        for(int i = lower; i <= upper; i++){
+            // min max的体现，在i的时候最差情况是最大的一边加自己（i), 每次更新最小值
+            maximum = Math.min(Math.max(getRangeMoneyAmount(lower, i-1), getRangeMoneyAmount(i+1, upper)) + i, maximum);
+        }
+        dp[lower][upper] = maximum;
+        return maximum;
+    }
+}
+
+---------------------
+
+minmax, recursion + memo, O(n*n)
