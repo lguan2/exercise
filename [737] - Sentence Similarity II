@@ -1,0 +1,35 @@
+better union find solution:
+class Solution {
+    public boolean areSentencesSimilarTwo(String[] words1, String[] words2, String[][] pairs) {
+        if(words1.length != words2.length)
+            return false;
+        Map<String, String> unions = new HashMap<>();
+        for(String[] pair : pairs){
+            String u = find(pair[0], unions);
+            String v = find(pair[1], unions);
+            if(!u.equals(v)){
+                unions.put(u, v);
+            }
+        }
+        for(int i = 0; i < words1.length; i++){
+            String u = find(words1[i], unions);
+            String v = find(words2[i], unions);
+            if(!u.equals(v))
+                return false;
+        }
+        return true;
+        
+    }
+    
+    public String find(String w, Map<String, String> unions){
+        String w2 = w;
+        while(true){
+            w2 = unions.get(w);
+            if(w2 == null) return w;
+                w = w2;
+        }
+    }
+}
+
+时间复杂度？？？  Very Important,
+dfs 的话也可以从O(pair * word) 优化成O(pair)， 建完图之后标价所有的联通分量，然后看每两个词是不是同一个联通分量里面的 -> O(pair + word)
