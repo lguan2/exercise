@@ -1,0 +1,27 @@
+    public static String findReplaceString(String s, int[] indexes, String[] sources, String[] targets) {
+        if (s == null) return null;
+        if (s.length() == 0) return "";
+        StringBuilder sb = new StringBuilder();
+        Map<Integer, String[]> map = new HashMap<>();
+        for (int i = 0; i < indexes.length; i++) {
+            map.put(indexes[i], new String[] {sources[i], targets[i]});
+        }
+        int i = 0;
+        while (i < s.length()) {
+            if (!map.containsKey(i)) {
+                sb.append(s.charAt(i));
+                i++;
+            } else {
+                String replacement = map.get(i)[1];
+                String origin = map.get(i)[0];
+                if (s.indexOf(origin, i) == i) {
+                    sb.append(replacement);
+                    i = i + origin.length();
+                } else {
+                    sb.append(s.charAt(i));
+                    i++;
+                }
+            }
+        }
+        return sb.toString();
+    }
