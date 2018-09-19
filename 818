@@ -1,0 +1,32 @@
+    // init pos = 0, init speed = 1
+    public static int racecar(int target) {
+        if (target == 0) return 0;
+        Set<String> visited = new HashSet<>();
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[] {0, 1});
+        visited.add(0 + ", " + 1);
+
+        int steps = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            steps++;
+            for (int i = 0; i < size; i++) {
+                int[] cur = queue.poll();
+                int aPos = cur[0] + cur[1];
+                int rPos = cur[0];
+                if (aPos == target || rPos == target) return steps;
+                int aSpeed = cur[1] * 2;
+                int rSpeed = cur[1] > 0 ? -1 : 1;
+
+                if (!visited.contains(aPos + ", " + aSpeed)) {
+                    queue.add(new int[] {aPos, aSpeed});
+                    visited.add(aPos + ", " + aSpeed);
+                }
+                if (!visited.contains(rPos + ", " + rSpeed)) {
+                    queue.add(new int[] {rPos, rSpeed});
+                    visited.add(rPos + ", " + rSpeed);
+                }
+            }
+        }
+        return steps;
+    }
