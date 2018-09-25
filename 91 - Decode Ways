@@ -42,3 +42,23 @@ Explanation: It could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
  ------------------------
  
  AC, slightly improve, 注意特殊情况， input "0"
+ 
+ 
+     public static int numDecodings(String s) {
+        if (s == null || s.length() == 0) return 0;
+        char[] A = s.toCharArray();
+        int[] dp = new int[A.length];
+
+        dp[0] = A[0] == '0' ? 0 : 1;
+        for (int i = 1; i < A.length; i++) {
+            char cur = A[i];
+            if (cur != '0') dp[i] = 1;
+            char pre = A[i - 1];
+            int twoDigits = (pre - '0') * 10 + (cur - '0');
+            if (twoDigits >= 10 && twoDigits <= 26) {
+                dp[i] += 1;
+            }
+        }
+        return dp[A.length - 1];
+
+    }
