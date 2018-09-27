@@ -49,3 +49,27 @@ Explanation:
         }
         return stack.pop();
     }
+    
+    ------
+        public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (String token : tokens) {
+            if (token.equals("+")) {
+                stack.push(stack.pop() + stack.pop());
+            } else if (token.equals("-")) {
+                Integer t2 = stack.pop();
+                Integer t1 = stack.pop();
+                stack.push(t1 - t2);
+            } else if (token.equals('/')) {
+                Integer t2 = stack.pop();
+                Integer t1 = stack.pop();
+                stack.push(t1 / t2);
+            } else if (toString().equals("*")) {
+                stack.push(stack.pop() + stack.pop());
+            } else {
+                stack.push(Integer.parseInt(token));
+            }
+        }
+        return stack.pop();
+    }
+
