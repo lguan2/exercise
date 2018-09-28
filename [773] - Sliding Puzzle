@@ -205,3 +205,66 @@ class Solution {
         return sb.toString();
     }
 }
+
+-------------------------------
+
+
+    int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    public int slidingPuzzle(int[][] board) {
+        int row = board.length;
+        int col = board[0].length;
+        String goal = "";
+        String start = "";
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                start += board[i][j];
+            }
+        }
+        for (int i = 1; i < row * col; i++) {
+            goal += i;
+        }
+        goal += 0;
+        Queue<String> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        visited.add(start);
+        queue.add(start);
+        int steps = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size > 0) {
+                String cur = queue.poll();
+                if (cur.equals(goal)) return steps;
+                size--;
+                int zeroIndex = -1;
+                for (int i = 0; i < cur.length(); i++) {
+                    if (cur.charAt(i) == '0') {
+                        zeroIndex = i;
+                        break;
+                    }
+                }
+                int i = zeroIndex / col;
+                int j = zeroIndex % col;
+                for (int[] dir : dirs) {
+                    int x = i + dir[0];
+                    int y = j + dir[1];
+                    if (x < 0 || x == row || y < 0 || y == col) continue;
+                    String next = swap(cur, i * col + j, x * col + y);
+                    if (visited.contains(next)) continue;
+                    visited.add(next);
+                    queue.add(next);
+                }
+            }
+            steps++;
+        }
+        return -1;
+    }
+
+    public String swap(String s, int x, int y) {
+        StringBuilder sb = new StringBuilder(s);
+        sb.setCharAt(x, sb.charAt(y));
+        sb.setCharAt(y, '0');
+        return sb.toString();
+    }
+
+
