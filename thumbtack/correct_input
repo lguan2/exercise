@@ -1,0 +1,70 @@
+
+package test;
+/**
+ * @author l.guan
+ *
+ */
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class CorrectInput {
+
+    public static void main(String[] args) {
+        Set<String> dict = new HashSet<>(Arrays.asList("Red", "Yellow", "Blue", "YelloW"));
+        CorrectInput correctInput = new CorrectInput(dict);
+        List<String> res = correctInput.correct("Yallow");
+        System.out.println(res.toString());
+
+    }
+
+    Set<String> dict;
+    Map<String, Set<String>> map;
+
+    public CorrectInput(Set<String> dict) {
+        this.dict = dict;
+        this.map = new HashMap<>();
+        for (String w : dict) {
+            String key = generateKey(w);
+            if (!map.containsKey(key)) {
+                map.put(key, new HashSet<>());
+            }
+            map.get(key).add(w);
+        }
+    }
+
+    public List<String> correct(String word) {
+        List<String> res = new ArrayList<>();
+        String key = generateKey(word);
+        if (map.containsKey(key)) {
+            Set<String> options = map.get(key);
+            if (options.contains(word)) {
+                res.add(word);
+            } else {
+                res = new ArrayList<>(options);
+            }
+        }
+        return res;
+    }
+
+    public String generateKey(String w) {
+        char[] letters = w.toLowerCase().toCharArray();
+        StringBuilder keySb = new StringBuilder();
+        for (char letter : letters) {
+            if (letter == 'a' || letter == 'e' || letter == 'i' || letter == 'o' || letter == 'u') {
+                keySb.append('*');
+            } else {
+                keySb.append(letter);
+            }
+        }
+        return keySb.toString();
+    }
+
+}
+
+
