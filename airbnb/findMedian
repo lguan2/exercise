@@ -1,0 +1,32 @@
+    public static double findMedian(int[] nums) {
+        int len = nums.length;
+        int left = Integer.MIN_VALUE;
+        int right = Integer.MAX_VALUE;
+        if (len % 2 != 0) {
+            return helper(nums, left, right, len / 2 + 1);
+        } else {
+            int h1 = helper(nums, left, right, len / 2);
+            int h2 = helper(nums, left, right, len / 2 + 1);
+            return (h1 + h2) / 2.0;
+        }
+    }
+
+    public static int helper(int[] nums, int left, int right, int k) {
+        if (left > right) return left;
+        int guess = left + (right - left) / 2;
+        int count = 0;
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] <= guess) {
+                res = Math.max(res, nums[i]);
+                count++;
+            }
+        }
+        if (count == k) {
+            return res;
+        } else if (count < k) {
+            return helper(nums, res + 1, right, k);
+        } else {
+            return helper(nums, left, res - 1, k);
+        }
+    }
