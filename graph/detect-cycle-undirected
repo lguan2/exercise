@@ -1,0 +1,77 @@
+package graph;
+
+import java.util.*;
+
+public class DetectCycle {
+    public static void main(String[] args) {
+        int[][] edges = {{0,1}, {1,2}, {2,0}};
+        int[][] edges2 = {{0,1}, {1,2}};
+
+        System.out.println(detectCycleInUndirectedGraphBFS(edges, 3));
+        System.out.println(detectCycleInUndirectedGraphBFS(edges2,3));
+
+        System.out.println(detectCycleInUndirectedGraphDFS(edges, 3));
+        System.out.println(detectCycleInUndirectedGraphDFS(edges2,3));
+
+
+    }
+
+
+    public static boolean detectCycleInUndirectedGraphBFS(int[][] edges, int n) {
+        // This can only check connected graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < n; i++) graph.put(i, new ArrayList<>());
+        for (int[] e : edges) {
+            graph.get(e[0]).add(e[1]);
+            graph.get(e[1]).add(e[0]);
+        }
+        Set<Integer> visited = new HashSet<>();
+        Queue<int[]> queue = new LinkedList<>();
+        visited.add(0);
+        queue.add(new int[]{0, -1});
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            for (Integer neighbour : graph.get(cur[0])) {
+                if (visited.contains(neighbour)) {
+                    if (neighbour.intValue() != cur[1]) {
+                        return false;
+                    } else {
+                        continue;
+                    }
+                }
+                visited.add(neighbour);
+                queue.add(new int[]{neighbour, cur[0]});
+            }
+        }
+        return true;
+    }
+
+    public static boolean detectCycleInUndirectedGraphDFS(int[][] edges, int n){
+        // This can only check connected graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < n; i++) graph.put(i, new ArrayList<>());
+        for (int[] e : edges) {
+            graph.get(e[0]).add(e[1]);
+            graph.get(e[1]).add(e[0]);
+        }
+        Set<Integer> visited = new HashSet<>();
+        visited.add(0);
+        return dfs(0, -1, graph, visited);
+
+    }
+
+    private static boolean dfs(int cur, int parent, Map<Integer, List<Integer>> graph, Set<Integer> visited){
+        for(Integer neighbour : graph.get(cur)){
+            if(visited.contains(neighbour)){
+                if(neighbour.intValue() == parent){
+                    continue;
+                }else{
+                    return false;
+                }
+            }
+            visited.add(neighbour);
+            if(!dfs(neighbour, cur, graph, visited)) return false;
+        }
+        return true;
+    }
+}
