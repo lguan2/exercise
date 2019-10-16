@@ -29,3 +29,33 @@
         }
         return temp2;
     }
+    
+    
+    public int rob3(TreeNode root){
+	if(root == null) return 0;
+	int sum = root.val;
+	int left = 0;
+	int right = 0;
+	if(root.left != null){
+		left = rob3(root.left);
+		if(root.left.left != null){
+			sum += root.left.left.val;
+		}
+		if(root.left.right != null){
+			sum += root.left.right.val;
+		}
+	}
+
+	if(root.right != null){
+		right = rob3(root.right);
+		if(root.right.left != null){
+			sum += root.right.left.val;
+		}
+		if(root.right.right != null){
+			sum += root.right.right.val;
+		}
+	}
+	// we must record valid max in cur node
+	root.val = Math.max(left+right, sum);
+	return root.val;
+}
