@@ -14,3 +14,18 @@
         }
         return temp2;
     }
+
+
+    public int rob(int[] nums){
+        if(nums == null || nums.length == 0) return 0;
+        int len = nums.length;
+        if(len == 1) return nums[0];
+        int temp1 = 0;
+        int temp2 = nums[0];
+        for(int i = 1; i < len; i++){
+            int cur = Math.max(temp1 + nums[i], temp2);
+            temp1 = temp2;
+            temp2 = cur;
+        }
+        return temp2;
+    }
