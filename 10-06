@@ -1,113 +1,17 @@
-//    int[] nums = {2,3,5,1};
-//    System.out.println(test2.rob(nums));
-    public int rob(int[] nums){
-        if(nums == null || nums.length == 0) return 0;
-        int len = nums.length;
-        if(len == 1) return nums[0];
-        if(len == 2) return Math.max(nums[0], nums[1]);
-        int temp1 = nums[0];
-        int temp2 = Math.max(nums[0], nums[1]);
-        for(int i = 2; i < len; i++){
-            int cur = Math.max(temp1 + nums[i], temp2);
-            temp1 = temp2;
-            temp2 = cur;
-        }
-        return temp2;
-    }
+#298
 
-
-    public int rob(int[] nums){
-        if(nums == null || nums.length == 0) return 0;
-        int len = nums.length;
-        if(len == 1) return nums[0];
-        int temp1 = 0;
-        int temp2 = nums[0];
-        for(int i = 1; i < len; i++){
-            int cur = Math.max(temp1 + nums[i], temp2);
-            temp1 = temp2;
-            temp2 = cur;
-        }
-        return temp2;
-    }
-    
-    
-    public int rob3(TreeNode root){
+public int longest(TreeNode root){
 	if(root == null) return 0;
-	int sum = root.val;
-	int left = 0;
-	int right = 0;
-	if(root.left != null){
-		left = rob3(root.left);
-		if(root.left.left != null){
-			sum += root.left.left.val;
-		}
-		if(root.left.right != null){
-			sum += root.left.right.val;
-		}
+	TreeNode left = longest(root.left);
+	TreeNode right = longest(root.right);
+	int res = 1;
+	if(root.left != null && root.val+1 == left.val){
+		res = 1 + left;
 	}
-
-	if(root.right != null){
-		right = rob3(root.right);
-		if(root.right.left != null){
-			sum += root.right.left.val;
-		}
-		if(root.right.right != null){
-			sum += root.right.right.val;
-		}
+	if(root.right != null && root.val+1 == right.val){
+		res = Math.max(res, 1 + right);
 	}
-	// we must record valid max in cur node
-	root.val = Math.max(left+right, sum);
-	return root.val;
-}
------
-rob2
-
-public int rob(int[] nums){
-	if(nums == null || nums.length == 0) return 0;
-	int len = nums.length;
-	int[] dp1 = new int[len+1];
-	int[] dp2 = new int[len+1];
-	//dp1[0] = 0;
-	dp1[1] = nums[0];
-	//dp2[0] = 0;
-	dp2[1] = 0;
-	for(int i = 2; i < len+1; i++){
-		dp1[i] = Math.max(dp1[i-1], dp1[i-2] + nums[i-1]);
-		dp2[i] = Math.max(dp2[i-1], dp2[i-2] + nums[i-1]);
-	}
-	return Math.max(dp1[len-1], dp2[len]);
+	return res;
 }
 
-
-public int uniqPaths(int m, int n){
-	if(m == 0 || n == 0) return 0;
-	int[][] dp = new int[m][n];
-	for(int i = 0; i < m; i++) dp[i][0] = 1;
-	for(int j = 0; j < n; j++) dp[0][j] = 1;
-	for(int i = 1; i < m; i++){
-		for(int j = 1; j < n; j++){
-			dp[i][j] = dp[i-1][j] + dp[i][j-1];
-		}
-	}
-	return dp[m-1][m-1];
-}
-
-public int uniqPathsWithObstacles(int[][] grids){
-	if(m == 0 || n == 0) return 0;
-	int[][] dp = new int[m][n];
-	dp[0][0] = 1;
-	for(int i = 1; i < m; i++){
-		if(dp[i-1][0] == 1 && grids[i][0] == 0)
-			dp[i][0] = 1;
-	}
-	for(int j = 1; j < n; j++){
-		if(dp[0][j-1] == 1 && grids[0][j] == 0)
-			dp[0][j] = 1;
-	}
-	for(int i = 1; i < m; i++){
-		for(int j = 1; j < n; j++){
-			if(grids[i][j] == 1) continue;
-			dp[i][j] = dp[i-1][j] + 
-		}
-	}
-}
+---------
