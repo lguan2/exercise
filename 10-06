@@ -15,3 +15,23 @@ public int longest(TreeNode root){
 }
 
 ---------
+
+
+class MyCalendar{
+	TreeMap<Integer, Integer> map;
+	public MyCalendar(){
+		map = new TreeMap<>();
+	}
+	public boolean book(int start, int end){
+		if(set.isEmpty()){
+			map.put(start, end);
+			return true;
+		}
+		Map.Entry ceilingEntry = map.ceilingEntry(start);
+		Map.Entry floorEntry = map.floorEntry(start);
+		if(ceilingEntry != null && ceilingEntry.getKey() < end) return false;
+		if(floorEntry != null && floorEntry.getValue() > start) return false;
+		map.put(start, end);
+		return true;
+	}
+}
