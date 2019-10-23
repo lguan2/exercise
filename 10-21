@@ -44,3 +44,42 @@
     }
     
     ----
+    //        int[][] matrix  = {{6,2,3},{5,4,2},{4,2,3}};
+    // 329
+
+    
+    int m;
+    int n;
+    int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+    int finalRes = 0;
+    public int longestIncreasingPath(int[][] matrix){
+        if(matrix == null || matrix.length == 0) return 0;
+        m = matrix.length;
+        n = matrix[0].length;
+        int[][] memo = new int[m][n];
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(memo[i][j] == 0){
+                    dfs(i, j, matrix, memo, Integer.MAX_VALUE);
+                }
+            }
+        }
+        return finalRes;
+    }
+
+    public int dfs(int x, int y, int[][] matrix, int[][] memo, int pre){
+        if(x < 0 || x == m || y < 0 || y == n) return 0;
+        if(memo[x][y] != 0) return memo[x][y];
+        if(matrix[x][y] >= pre) return 0;
+        int res = 1;
+        for(int[] d : dirs){
+            int i = x + d[0];
+            int j = y + d[1];
+            int candidate = dfs(i, j, matrix, memo, matrix[x][y]);
+            res = Math.max(res, candidate+1);
+        }
+        memo[x][y] = res;
+        finalRes = Math.max(res, finalRes);
+        return res;
+    }
+
