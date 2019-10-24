@@ -82,4 +82,51 @@
         finalRes = Math.max(res, finalRes);
         return res;
     }
+------
+
+207
+    
+    //    int[][] prerequisites = {{0,1},{1,0}};
+//    System.out.println(test2.canFinish(2, prerequisites));
+//    prerequisites = new int[][]{{0,1},{0,2}};
+//    System.out.println(test2.canFinish(3, prerequisites));
+//    prerequisites = new int[][]{{0,1},{0,2},{1,3},{2,3}};
+//    System.out.println(test2.canFinish(4, prerequisites));
+
+    public boolean canFinish(int numCourses, int[][] prerequisites){
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for(int i = 0; i < numCourses; i++){
+            graph.put(i, new ArrayList<>());
+        }
+        for(int[] p : prerequisites){
+            graph.get(p[1]).add(p[0]);
+        }
+        int[] visited = new int[numCourses];
+        for(int i = 0; i < numCourses; i++){
+            if(visited[i] == 0){
+                if(!dfs(i, graph, visited)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    public boolean dfs(int cur,  Map<Integer, List<Integer>> graph, int[] visited){
+        if(visited[cur] == 1){
+            return false;
+        }
+        if(visited[cur] == 2){
+            return true;
+        }
+        visited[cur] = 1;
+        for(Integer child : graph.get(cur)){
+            if(!dfs(child, graph, visited)){
+                return false;
+            }
+        }
+        visited[cur] = 2;
+        return true;
+    }
 
