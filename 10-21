@@ -129,4 +129,42 @@
         visited[cur] = 2;
         return true;
     }
+    
+    ----
+    
+    public List<Integer> canFinish(int n, int[][] prerequisites){
+	int[] viisted = new int[n];
+	Map<Integer, List<Integer>> graph = new HashMap<>();
+	for(int i = 0; i < n; i++){
+		graph.put(i, new ArrayList<>());
+	}
+	for(int[] p : prerequisites){
+		graph.get(p[1]).add(p[0]);
+	}
+	List<Integer> list = new ArrayList<>();
+	for(int i = 0; i < n; i++){
+		if(visited[i] != 0){
+			if(!dfs(graph, visited, i, list)){
+				return new ArrayList<>();
+			}
+		}
+	}
+	Collections.sort(list);
+	return list;
+}
+
+
+public boolean dfs(Map<Integer, List<Integer>> graph, int[] viisted, int cur, List<Integer> list){
+	if(visited[cur] == 1) return false;
+	if(visited[cur] == 2) return true;
+	visited[cur] = 1;
+	for(Integer child : graph.get(child)){
+		if(!dfs(graph, visited, child, list)){
+			return false;
+		}
+	}
+	viisted[cur] = 2;
+	list.add(cur);
+	return true;	
+}
 
