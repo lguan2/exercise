@@ -25,3 +25,44 @@
     }
     
  ------
+
+// 244
+class WordDistance{
+    public static void main(String[] args) {
+
+        String[] words = {"abc", "abc", "bcd", "ade", "cdf", "abc"};
+        WordDistance wordDistance = new WordDistance(words);
+        System.out.println(wordDistance.shortest("abc", "bcd"));
+        System.out.println(wordDistance.shortest("abc", "cdf"));
+        System.out.println(wordDistance.shortest("cdf", "bcd"));
+
+
+
+
+    }
+    Map<String, List<Integer>> map;
+    public WordDistance(String[] words){
+        map = new HashMap<>();
+        if(words == null) return;
+        for(int i = 0; i < words.length; i++){
+            map.putIfAbsent(words[i], new ArrayList<>());
+            map.get(words[i]).add(i);
+        }
+    }
+
+    public int shortest(String word1, String word2){
+        List<Integer> l1 = map.get(word1);
+        List<Integer> l2 = map.get(word2);
+        int p1 = 0, p2 = 0;
+        int res = Integer.MAX_VALUE;
+        while(p1 < l1.size() && p2 < l2.size()){
+            res = Math.min(res, Math.abs(l1.get(p1) - l2.get(p2)));
+            if(l1.get(p1) < l2.get(p2)){
+                p1++;
+            }else{
+                p2++;
+            }
+        }
+        return res;
+    }
+}
