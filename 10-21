@@ -167,4 +167,20 @@ public boolean dfs(Map<Integer, List<Integer>> graph, int[] viisted, int cur, Li
 	list.add(cur);
 	return true;	
 }
+----
+public int[] dailyTemperatures(int[] temperatures){
+	if(temperatures == null || temperatures.length == 0) return temperatures;
+	Stack<Integer> stack = new Stack<>();
+	int[] res = new int[temperatures.length];
+	stack.push(0);
+	for(int i = 1; i < temperatures.length; i++)}{
+		if(!stack.isEmpty()){
+			while(temperatures[i] > temperatures[stack.peek()]){
+				int pre = stack.pop();
+				res[pre] = i-pre;
+			}
+		}
+	}
+	return res;
+}
 
