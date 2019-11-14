@@ -272,3 +272,87 @@ public MaxStack{
 		return res;
 	}
 }
+---
+
+public class MaxStack {
+
+    public static void main(String[] args) {
+        MaxStack test = new MaxStack();
+        test.push(1);
+        test.push(3);
+        test.push(1);
+        test.push(3);
+        System.out.println(test.peekMax());
+        System.out.println(test.peek());
+        System.out.println(test.pop());
+        System.out.println(test.popMax());
+        System.out.println(test.peek());
+        System.out.println(test.popMax());
+        System.out.println(test.popMax());
+
+
+
+
+    }
+
+    Stack<Integer> stack;
+    Stack<Integer> maxStack;
+
+    public MaxStack() {
+        this.stack = new Stack<>();
+        this.maxStack = new Stack<>();
+    }
+
+    public void push(int val) {
+        stack.push(val);
+        if (maxStack.isEmpty() || val >= maxStack.peek()) {
+            maxStack.push(val);
+        }
+    }
+
+    public int pop() {
+        if (stack.isEmpty()) {
+            return -1;
+        }
+        int res = stack.pop();
+        if (maxStack.peek() == res) {
+            maxStack.pop();
+        }
+        return res;
+    }
+
+    public int peek() {
+        if (stack.isEmpty()) {
+            return -1;
+        }
+        return stack.peek();
+
+    }
+
+    public int peekMax() {
+        if (stack.isEmpty()) {
+            return -1;
+        }
+        return stack.peek();
+    }
+
+    public int popMax() {
+        if (stack.isEmpty()) {
+            return -1;
+        }
+        int res = maxStack.pop();
+        Stack<Integer> temp = new Stack<>();
+        while (stack.peek() != res) {
+            temp.add(stack.pop());
+        }
+        stack.pop();
+        while (!temp.isEmpty()) {
+            int t = temp.pop();
+            stack.push(t);
+            if (t >= maxStack.peek()) {
+                maxStack.push(t);
+            }
+        }
+        return res;
+    }
+}
